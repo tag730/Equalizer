@@ -16,155 +16,44 @@ import android.widget.TextView;
 
 public class AudioEqualizerActivity extends Activity {
 	
-    /** Called when the activity is first created. */
+	// Using LinearLayout instead of R.layout.main (main.xml)
 	LinearLayout mLinearLayout;
+	
+	// mService is the object for using interface methods
 	EqInterface mService = null;
+	
+	// Boolean for whether we are bound to the EqService or not
 	private boolean mIsBound;
 	
 	@Override
 	public void onPause() {
+		// Call parent class's "onPause()"
 		super.onPause();
+		
+		// If our Activity is closing, we don't want to kill the Service, but we will unbind from it
 		if(mIsBound){
             // Detach our existing connection.
             unbindService(mConnection);
+            // Set to "not bound"
             mIsBound = false;
 		}
 	}
 	
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        // Call parent class's "onCreate(Bundle)" method
+    	super.onCreate(savedInstanceState);
         
+    	// First, we start the service (if it wasn't started on boot)
         startService(new Intent(EqService.class.getName()));
+        
+        // Next, we bind to the service to interact with it with our UI
         bindService(new Intent(EqService.class.getName()),
                 mConnection, Context.BIND_AUTO_CREATE);
+        
+        // Set to "bound"
         mIsBound = true;        
-    }
-    
-    private void setupUI(){
-        mLinearLayout = new LinearLayout(this);
-        mLinearLayout.setOrientation(LinearLayout.VERTICAL);
-
-        setContentView(mLinearLayout);       
-
-        short bands;
-		try {
-			bands = (short)mService.getNumberOfBands();
-        	
-            TextView freqTextView;// = new TextView(this);
-//            freqTextView.setLayoutParams(new ViewGroup.LayoutParams(
-//                    ViewGroup.LayoutParams.FILL_PARENT,
-//                    ViewGroup.LayoutParams.WRAP_CONTENT));
-//            freqTextView.setGravity(Gravity.CENTER_HORIZONTAL);
-//            freqTextView.setText("Preamp");
-//            mLinearLayout.addView(freqTextView);
-
-            LinearLayout row;// = new LinearLayout(this);
-//            row.setOrientation(LinearLayout.HORIZONTAL);
-
-            TextView minDbTextView;// = new TextView(this);
-//            minDbTextView.setLayoutParams(new ViewGroup.LayoutParams(
-//                    ViewGroup.LayoutParams.WRAP_CONTENT,
-//                    ViewGroup.LayoutParams.WRAP_CONTENT));
-//            minDbTextView.setText((mService.getBandLevelLow() / 100) + " dB");
-
-            TextView maxDbTextView;// = new TextView(this);
-//            maxDbTextView.setLayoutParams(new ViewGroup.LayoutParams(
-//                    ViewGroup.LayoutParams.WRAP_CONTENT,
-//                    ViewGroup.LayoutParams.WRAP_CONTENT));
-//            maxDbTextView.setText((mService.getBandLevelHigh() / 100) + " dB");
-
-            LinearLayout.LayoutParams layoutParams;// = new LinearLayout.LayoutParams(
-//                    ViewGroup.LayoutParams.FILL_PARENT,
-//                    ViewGroup.LayoutParams.WRAP_CONTENT);
-//            layoutParams.weight = 1;
-            SeekBar bar;// = new SeekBar(this);
-//            bar.setLayoutParams(layoutParams);
-//            bar.setMax(mService.getBandLevelHigh() - mService.getBandLevelLow());
-//            bar.setProgress(mService.getPreAmpLevel()-mService.getBandLevelLow());
-//
-//            bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-//                public void onProgressChanged(SeekBar seekBar, int progress,
-//                        boolean fromUser) {
-//                    try {
-//						mService.setPreAmpLevel((int) (progress + mService.getBandLevelLow()));
-//					} catch (RemoteException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-//                }
-//
-//                public void onStartTrackingTouch(SeekBar seekBar) {}
-//                public void onStopTrackingTouch(SeekBar seekBar) {}
-//            });
-
-//            row.addView(minDbTextView);
-//            row.addView(bar);
-//            row.addView(maxDbTextView);
-//
-//            mLinearLayout.addView(row);
-			
-
-	        for (short i = 0; i < bands; i++) {
-	            final short band = i;
-	
-	            freqTextView = new TextView(this);
-	            freqTextView.setLayoutParams(new ViewGroup.LayoutParams(
-	                    ViewGroup.LayoutParams.FILL_PARENT,
-	                    ViewGroup.LayoutParams.WRAP_CONTENT));
-	            freqTextView.setGravity(Gravity.CENTER_HORIZONTAL);
-	            freqTextView.setText((mService.getCenterFreq((int)band) / 1000) + " Hz");
-	            mLinearLayout.addView(freqTextView);
-	
-	            row = new LinearLayout(this);
-	            row.setOrientation(LinearLayout.HORIZONTAL);
-	
-	            minDbTextView = new TextView(this);
-	            minDbTextView.setLayoutParams(new ViewGroup.LayoutParams(
-	                    ViewGroup.LayoutParams.WRAP_CONTENT,
-	                    ViewGroup.LayoutParams.WRAP_CONTENT));
-	            minDbTextView.setText((mService.getBandLevelLow() / 100) + " dB");
-	
-	            maxDbTextView = new TextView(this);
-	            maxDbTextView.setLayoutParams(new ViewGroup.LayoutParams(
-	                    ViewGroup.LayoutParams.WRAP_CONTENT,
-	                    ViewGroup.LayoutParams.WRAP_CONTENT));
-	            maxDbTextView.setText((mService.getBandLevelHigh() / 100) + " dB");
-	
-	            layoutParams = new LinearLayout.LayoutParams(
-	                    ViewGroup.LayoutParams.FILL_PARENT,
-	                    ViewGroup.LayoutParams.WRAP_CONTENT);
-	            layoutParams.weight = 1;
-	            bar = new SeekBar(this);
-	            bar.setLayoutParams(layoutParams);
-	            bar.setMax(mService.getBandLevelHigh() - mService.getBandLevelLow());
-	            bar.setProgress(mService.getBandLevel((int)band)-mService.getBandLevelLow());
-	
-	            bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-	                public void onProgressChanged(SeekBar seekBar, int progress,
-	                        boolean fromUser) {
-	                    try {
-							mService.setBandLevel((int)band, (int) (progress + mService.getBandLevelLow()));
-						} catch (RemoteException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-	                }
-	
-	                public void onStartTrackingTouch(SeekBar seekBar) {}
-	                public void onStopTrackingTouch(SeekBar seekBar) {}
-	            });
-	
-	            row.addView(minDbTextView);
-	            row.addView(bar);
-	            row.addView(maxDbTextView);
-	
-	            mLinearLayout.addView(row);
-	        }	
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
     }
     
     /**
@@ -178,7 +67,12 @@ public class AudioEqualizerActivity extends Activity {
             // interact with the service.  We are communicating with our
             // service through an IDL interface, so get a client-side
             // representation of that from the raw service object.
+        	
+        	// Set our service object up as an interface, so we can use the methods
             mService = EqInterface.Stub.asInterface(service);
+            
+            // Now that we can use the methods, we can set up our progressBars and other
+            // UI elements for the Equalizer
             setupUI();
         }
 
@@ -188,4 +82,95 @@ public class AudioEqualizerActivity extends Activity {
             mService = null;
         }
     };
+    
+    private void setupUI(){
+    	// Main linear layout, vertical
+        mLinearLayout = new LinearLayout(this);
+        mLinearLayout.setOrientation(LinearLayout.VERTICAL);
+
+        // Set as main content view
+        setContentView(mLinearLayout);       
+
+        // short value representing number of bands supported by Android Audio Engine
+        short bands;
+        
+        // Have to surround every call to the service interface with a "try" block, just in case
+        // our connection has dropped with the service
+		try {
+			// get number of supported bands
+			bands = (short)mService.getNumberOfBands();		
+
+			// for each of the supported bands, we will set up a slider from -10dB to 10dB boost/attenuation,
+			// as well as text labels to assist the user
+	        for (short i = 0; i < bands; i++) {
+	            final short band = i;
+	
+	            // Setup textview to label the frequency band (with center frequency)
+	            TextView freqTextView = new TextView(this);
+	            freqTextView.setLayoutParams(new ViewGroup.LayoutParams(
+	                    ViewGroup.LayoutParams.FILL_PARENT,
+	                    ViewGroup.LayoutParams.WRAP_CONTENT));
+	            freqTextView.setGravity(Gravity.CENTER_HORIZONTAL);
+	            freqTextView.setText((mService.getCenterFreq((int)band) / 1000) + " Hz");
+	            mLinearLayout.addView(freqTextView);
+	
+	            // now we have a 3-part linearlayout, consisting of lower dB limit label,
+	            // then the slider bar (SeekBar), then the higher dB limit text label
+	            LinearLayout row = new LinearLayout(this);
+	            row.setOrientation(LinearLayout.HORIZONTAL);
+	
+	            // Set up lower dB limit text label
+	            TextView minDbTextView = new TextView(this);
+	            minDbTextView.setLayoutParams(new ViewGroup.LayoutParams(
+	                    ViewGroup.LayoutParams.WRAP_CONTENT,
+	                    ViewGroup.LayoutParams.WRAP_CONTENT));
+	            minDbTextView.setText((mService.getBandLevelLow() / 100) + " dB");
+	
+	            // Set up higher dB limit text label
+	            TextView maxDbTextView = new TextView(this);
+	            maxDbTextView.setLayoutParams(new ViewGroup.LayoutParams(
+	                    ViewGroup.LayoutParams.WRAP_CONTENT,
+	                    ViewGroup.LayoutParams.WRAP_CONTENT));
+	            maxDbTextView.setText((mService.getBandLevelHigh() / 100) + " dB");
+	            
+	            // Set up SeekBar for this band
+	            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+	                    ViewGroup.LayoutParams.FILL_PARENT,
+	                    ViewGroup.LayoutParams.WRAP_CONTENT);
+	            layoutParams.weight = 1;
+	            SeekBar bar = new SeekBar(this);
+	            bar.setLayoutParams(layoutParams);
+	            // Assign the seekbar the appropriate max value
+	            bar.setMax(mService.getBandLevelHigh() - mService.getBandLevelLow());
+	            // Apply the current value to the seekbar
+	            bar.setProgress(mService.getBandLevel((int)band)-mService.getBandLevelLow());
+	
+	            // Set up so that when seekbar changes for a certain band, we update the
+	            // actual value of the band in our Equalizer object in the EqService class
+	            bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+	                public void onProgressChanged(SeekBar seekBar, int progress,
+	                        boolean fromUser) {
+	                    try {
+							mService.setBandLevel((int)band, (int) (progress + mService.getBandLevelLow()));
+						} catch (RemoteException e) {
+							e.printStackTrace();
+						}
+	                }
+	
+	                public void onStartTrackingTouch(SeekBar seekBar) {}
+	                public void onStopTrackingTouch(SeekBar seekBar) {}
+	            });
+	
+	            // Add in the two textviews and seekbar
+	            row.addView(minDbTextView);
+	            row.addView(bar);
+	            row.addView(maxDbTextView);
+	            
+	            // Add the total band into the main linearlayout
+	            mLinearLayout.addView(row);
+	        }	
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+    }
 }
