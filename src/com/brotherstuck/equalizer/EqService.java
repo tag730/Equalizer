@@ -11,73 +11,87 @@ import android.util.Log;
 
 public class EqService extends Service {
 	
-	private static final String TAG = EqService.class.getSimpleName();
+	  // short name for debugging
+	  private static final String TAG = EqService.class.getSimpleName();
 	
 	  private Equalizer myEq;
+	  
+	  // BassBoost and Virtualizer not currently being implemented
 	  private BassBoost mBassBoost;
 	  private Virtualizer mVirtualizer;
-	  
-	  
 	  private int maxLevel, minLevel;
+	  // isRunning currently not being used
       public static boolean isRunning;
 
 	  @Override
 	  public void onCreate() {
-	    // Start up the thread running the service.  Note that we create a
-	    // separate thread because the service normally runs in the process's
-	    // main thread, which we don't want to block.  We also make it
-	    // background priority so CPU-intensive work will not disrupt our UI.
-//	    HandlerThread thread = new HandlerThread("ServiceStartArguments",
-//	            Process.THREAD_PRIORITY_BACKGROUND);
-//	    thread.start();
-//	    
-//	    // Get the HandlerThread's Looper and use it for our Handler 
-//	    mServiceLooper = thread.getLooper();
-//	    mServiceHandler = new ServiceHandler(mServiceLooper);
+	    // In the manifest.xml, this service is listed as a "remote" service, so it
+		// runs on its own thread, separate from the Android UI thread
+		  
+		  // Create log entry for debugging
 		  Log.i(TAG,"Service creating...");
+		  // Call parent class's create method...
 		  super.onCreate();
 		  
+		  // Setup a Audio Effect "Equalizer" object with priority=10 and audio session id=0 (global)
 	      myEq = new Equalizer(10,0);
 	      myEq.setEnabled(true);
-	      myEq.usePreset((short)0);
-	      mBassBoost=new BassBoost(10,0);
-//	      mBassBoost.setEnabled(true);
-	      mVirtualizer=new Virtualizer(10,0);
-//	      mVirtualizer.setEnabled(true);
 	      
+	      // TODO : Implement BassBoost and Virtualizer
+	      // Setup a "BassBoost" object with priority=10, and audio session id=0 (global)
+	      mBassBoost=new BassBoost(10,0);
+	      // Setup a "Virtualizer" object with priority=10, and audio session id=0 (global)
+	      mVirtualizer=new Virtualizer(10,0);
+	      
+	      // Set up variables for max boost/attenuation for the bands of the equalizer
 		  maxLevel=(int)myEq.getBandLevelRange()[1];
 	      minLevel=(int)myEq.getBandLevelRange()[0];
+	      
+	      // Create log entry for debugging
 	      Log.i(TAG,"Service created");		  
 	  }
 
+	  // Service can be started either on boot, by the BootReceiver class, which listens for "BOOT_COMPLETE"
+	  // from OS, or by the AudioEqualizerActivity
 	  @Override
 	  public int onStartCommand(Intent intent, int flags, int startId) {
+		  // Log entry for debugging
 		  Log.i(TAG,"Service started");
 
-	      // For each start request, send a message to start a job and deliver the
-	      // start ID so we know which request we're stopping when we finish the job
-
+		  // Currently has no effect
 	      isRunning=true;
 	      
-	      // If we get killed, after returning from here, restart
+	      // If service gets killed, restart
 	      return START_STICKY;
 	  }
 
 	  @Override
 	  public IBinder onBind(Intent intent) {
-	      // We don't provide binding, so return null
+	      // Log entry for debugging
 		  Log.i(TAG,"Service bound");
+		  
+		  // Return Binder object which delivers interface to Activity
 	      return mBinder;
 	  }
 	  
 	  @Override
 	  public void onDestroy() {
-	    Log.i(TAG,"Service destroyed");
-	    myEq.release();
-	    myEq=null;
-	    isRunning=false;
+		  // Log entry for debugging
+		  Log.i(TAG,"Service destroyed");
+		  
+		  // Release EQ object to free memory and control
+		  myEq.release();
+		  // Set myEq pointer to null
+		  myEq=null;
+		  
+		  // Currently no significant effect
+		  isRunning=false;
 	  }
 	  
+	  
+	  // Implementations of interface functions, which basically are just getters
+	  // and setters for the Equalizer, BassBoost, and Virtualizer objects vital
+	  // for control and UI in the Activity
 	  private final EqInterface.Stub mBinder = new EqInterface.Stub() {
 			public int getBandLevelLow() throws RemoteException {
 				Log.i(TAG,"Returned BandLevelLow to Client");
