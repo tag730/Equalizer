@@ -86,7 +86,7 @@ public class AudioEqualizerActivity extends Activity {
     private void setupUI(){
     	// Main linear layout, vertical
         mLinearLayout = new LinearLayout(this);
-        mLinearLayout.setOrientation(LinearLayout.VERTICAL);
+        mLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
 
         // Set as main content view
         setContentView(mLinearLayout);       
@@ -98,26 +98,34 @@ public class AudioEqualizerActivity extends Activity {
         // our connection has dropped with the service
 		try {
 			// get number of supported bands
-			bands = (short)mService.getNumberOfBands();		
+			bands = (short)mService.getNumberOfBands();	
 
 			// for each of the supported bands, we will set up a slider from -10dB to 10dB boost/attenuation,
 			// as well as text labels to assist the user
 	        for (short i = 0; i < bands; i++) {
 	            final short band = i;
+	            LinearLayout row = new LinearLayout(this);
+	            row.setOrientation(LinearLayout.VERTICAL);
+	            row.setLayoutParams(new LinearLayout.LayoutParams(
+	                    LinearLayout.LayoutParams.FILL_PARENT,
+	                    LinearLayout.LayoutParams.FILL_PARENT, 1f));	            
 	
 	            // Setup textview to label the frequency band (with center frequency)
 	            TextView freqTextView = new TextView(this);
 	            freqTextView.setLayoutParams(new ViewGroup.LayoutParams(
-	                    ViewGroup.LayoutParams.FILL_PARENT,
+	                    ViewGroup.LayoutParams.WRAP_CONTENT,
 	                    ViewGroup.LayoutParams.WRAP_CONTENT));
 	            freqTextView.setGravity(Gravity.CENTER_HORIZONTAL);
-	            freqTextView.setText((mService.getCenterFreq((int)band) / 1000) + " Hz");
-	            mLinearLayout.addView(freqTextView);
+	            freqTextView.setText((mService.getCenterFreq((int)band) / 1000) + "\nHz");
+	            row.addView(freqTextView);
 	
 	            // now we have a 3-part linearlayout, consisting of lower dB limit label,
 	            // then the slider bar (SeekBar), then the higher dB limit text label
-	            LinearLayout row = new LinearLayout(this);
-	            row.setOrientation(LinearLayout.HORIZONTAL);
+	            LinearLayout col= new LinearLayout(this);
+	            col.setOrientation(LinearLayout.VERTICAL);
+	            col.setLayoutParams(new ViewGroup.LayoutParams(
+	                    ViewGroup.LayoutParams.WRAP_CONTENT,
+	                    ViewGroup.LayoutParams.FILL_PARENT));
 	
 	            // Set up lower dB limit text label
 	            TextView minDbTextView = new TextView(this);
@@ -135,20 +143,23 @@ public class AudioEqualizerActivity extends Activity {
 	            
 	            // Set up SeekBar for this band
 	            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-	                    ViewGroup.LayoutParams.FILL_PARENT,
-	                    ViewGroup.LayoutParams.WRAP_CONTENT);
+	                    ViewGroup.LayoutParams.WRAP_CONTENT,
+	                    ViewGroup.LayoutParams.FILL_PARENT);
 	            layoutParams.weight = 1;
-	            SeekBar bar = new SeekBar(this);
+	            VerticalSeekBar bar = new VerticalSeekBar(this);
 	            bar.setLayoutParams(layoutParams);
+	            bar.setProgressDrawable(getResources().getDrawable(R.drawable.progress_vertical));
+	            bar.setThumb(getResources().getDrawable(R.drawable.seek_thumb));
 	            // Assign the seekbar the appropriate max value
 	            bar.setMax(mService.getBandLevelHigh() - mService.getBandLevelLow());
 	            // Apply the current value to the seekbar
 	            bar.setProgress(mService.getBandLevel((int)band)-mService.getBandLevelLow());
+	            
 	
 	            // Set up so that when seekbar changes for a certain band, we update the
 	            // actual value of the band in our Equalizer object in the EqService class
-	            bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-	                public void onProgressChanged(SeekBar seekBar, int progress,
+	            bar.setOnSeekBarChangeListener(new VerticalSeekBar.OnSeekBarChangeListener() {
+	                public void onProgressChanged(VerticalSeekBar seekBar, int progress,
 	                        boolean fromUser) {
 	                    try {
 							mService.setBandLevel((int)band, (int) (progress + mService.getBandLevelLow()));
@@ -157,14 +168,15 @@ public class AudioEqualizerActivity extends Activity {
 						}
 	                }
 	
-	                public void onStartTrackingTouch(SeekBar seekBar) {}
-	                public void onStopTrackingTouch(SeekBar seekBar) {}
+	                public void onStartTrackingTouch(VerticalSeekBar seekBar) {}
+	                public void onStopTrackingTouch(VerticalSeekBar seekBar) {}
 	            });
 	
 	            // Add in the two textviews and seekbar
-	            row.addView(minDbTextView);
-	            row.addView(bar);
-	            row.addView(maxDbTextView);
+	            col.addView(maxDbTextView);
+	            col.addView(bar);
+	            col.addView(minDbTextView);
+	            row.addView(col);
 	            
 	            // Add the total band into the main linearlayout
 	            mLinearLayout.addView(row);
