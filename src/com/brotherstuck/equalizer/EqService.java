@@ -8,6 +8,7 @@ import android.media.audiofx.Virtualizer;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
+import android.widget.Toast;
 
 public class EqService extends Service {
 	
@@ -155,6 +156,42 @@ public class EqService extends Service {
 			@Override
 			public void setVirtualizerStrength(int strength) throws RemoteException {
 				mVirtualizer.setStrength((short)strength);
+			}
+			@Override
+			public void usePreset(int preset) throws RemoteException {
+				myEq.usePreset((short)preset);
+			}
+			@Override
+			public void setProperties(String properties) throws RemoteException {
+//				myEq.setProperties(new Equalizer.Settings(properties));
+				String delims = ";";
+				String[] splitProperties = properties.split(delims);
+				short preset,numBands,band;
+//				preset=Short.parseShort(splitProperties[0]);
+//				myEq.usePreset(preset);
+				numBands=Short.parseShort(splitProperties[0]);
+				for(short i=0; i<numBands; i++) {
+					band=Short.parseShort(splitProperties[1+i]);
+					myEq.setBandLevel(i, band);
+				}
+			}
+			@Override
+			public String getProperties() throws RemoteException {
+				String properties="";
+				short numBands;
+//				properties += "Equalizer;";
+				numBands=myEq.getNumberOfBands();
+//				properties += Short.toString(myEq.getCurrentPreset())+";";
+				properties += Short.toString(numBands)+";";
+				for(short i=1; i<=numBands;i++){
+					properties += Short.toString(myEq.getBandLevel((short)(i-1)))+";";
+				}
+				
+//				boolean same=(properties.equals(myEq.getProperties().toString()));
+//				Toast.makeText(getBaseContext(), Boolean.toString(same), Toast.LENGTH_LONG);
+				return properties;
+//				Equalizer.Settings mySettings=myEq.getProperties();
+//				return mySettings.toString();
 			}
 	  };
 }

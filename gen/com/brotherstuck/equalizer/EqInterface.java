@@ -165,6 +165,32 @@ this.setVirtualizerStrength(_arg0);
 reply.writeNoException();
 return true;
 }
+case TRANSACTION_usePreset:
+{
+data.enforceInterface(DESCRIPTOR);
+int _arg0;
+_arg0 = data.readInt();
+this.usePreset(_arg0);
+reply.writeNoException();
+return true;
+}
+case TRANSACTION_setProperties:
+{
+data.enforceInterface(DESCRIPTOR);
+java.lang.String _arg0;
+_arg0 = data.readString();
+this.setProperties(_arg0);
+reply.writeNoException();
+return true;
+}
+case TRANSACTION_getProperties:
+{
+data.enforceInterface(DESCRIPTOR);
+java.lang.String _result = this.getProperties();
+reply.writeNoException();
+reply.writeString(_result);
+return true;
+}
 case TRANSACTION_isRunning:
 {
 data.enforceInterface(DESCRIPTOR);
@@ -422,6 +448,53 @@ _reply.recycle();
 _data.recycle();
 }
 }
+public void usePreset(int preset) throws android.os.RemoteException
+{
+android.os.Parcel _data = android.os.Parcel.obtain();
+android.os.Parcel _reply = android.os.Parcel.obtain();
+try {
+_data.writeInterfaceToken(DESCRIPTOR);
+_data.writeInt(preset);
+mRemote.transact(Stub.TRANSACTION_usePreset, _data, _reply, 0);
+_reply.readException();
+}
+finally {
+_reply.recycle();
+_data.recycle();
+}
+}
+public void setProperties(java.lang.String properties) throws android.os.RemoteException
+{
+android.os.Parcel _data = android.os.Parcel.obtain();
+android.os.Parcel _reply = android.os.Parcel.obtain();
+try {
+_data.writeInterfaceToken(DESCRIPTOR);
+_data.writeString(properties);
+mRemote.transact(Stub.TRANSACTION_setProperties, _data, _reply, 0);
+_reply.readException();
+}
+finally {
+_reply.recycle();
+_data.recycle();
+}
+}
+public java.lang.String getProperties() throws android.os.RemoteException
+{
+android.os.Parcel _data = android.os.Parcel.obtain();
+android.os.Parcel _reply = android.os.Parcel.obtain();
+java.lang.String _result;
+try {
+_data.writeInterfaceToken(DESCRIPTOR);
+mRemote.transact(Stub.TRANSACTION_getProperties, _data, _reply, 0);
+_reply.readException();
+_result = _reply.readString();
+}
+finally {
+_reply.recycle();
+_data.recycle();
+}
+return _result;
+}
 public boolean isRunning() throws android.os.RemoteException
 {
 android.os.Parcel _data = android.os.Parcel.obtain();
@@ -454,7 +527,10 @@ static final int TRANSACTION_isVirtualizerEnabled = (android.os.IBinder.FIRST_CA
 static final int TRANSACTION_setVirtualizerEnabled = (android.os.IBinder.FIRST_CALL_TRANSACTION + 11);
 static final int TRANSACTION_getVirtualizerStrength = (android.os.IBinder.FIRST_CALL_TRANSACTION + 12);
 static final int TRANSACTION_setVirtualizerStrength = (android.os.IBinder.FIRST_CALL_TRANSACTION + 13);
-static final int TRANSACTION_isRunning = (android.os.IBinder.FIRST_CALL_TRANSACTION + 14);
+static final int TRANSACTION_usePreset = (android.os.IBinder.FIRST_CALL_TRANSACTION + 14);
+static final int TRANSACTION_setProperties = (android.os.IBinder.FIRST_CALL_TRANSACTION + 15);
+static final int TRANSACTION_getProperties = (android.os.IBinder.FIRST_CALL_TRANSACTION + 16);
+static final int TRANSACTION_isRunning = (android.os.IBinder.FIRST_CALL_TRANSACTION + 17);
 }
 public int getBandLevelLow() throws android.os.RemoteException;
 public int getBandLevelHigh() throws android.os.RemoteException;
@@ -470,5 +546,8 @@ public boolean isVirtualizerEnabled() throws android.os.RemoteException;
 public void setVirtualizerEnabled(boolean isEnabled) throws android.os.RemoteException;
 public int getVirtualizerStrength() throws android.os.RemoteException;
 public void setVirtualizerStrength(int strength) throws android.os.RemoteException;
+public void usePreset(int preset) throws android.os.RemoteException;
+public void setProperties(java.lang.String properties) throws android.os.RemoteException;
+public java.lang.String getProperties() throws android.os.RemoteException;
 public boolean isRunning() throws android.os.RemoteException;
 }

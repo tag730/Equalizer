@@ -3,5 +3,8 @@
 
     <string name="hello">Hello World, AudioEqualizerActivity!</string>
     <string name="app_name">AudioEqualizer</string>
+    <string name="EQ">Equalizer</string>
+    <string name="bass_boost">Bass Boost</string>
+    <string name="virtualizer">Virtualizer (3D Effect)</string>
 
 </resources>

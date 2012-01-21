@@ -11,37 +11,51 @@ public final class R {
     public static final class attr {
     }
     public static final class drawable {
-        public static final int ic_launcher=0x7f020000;
-        public static final int progress_vertical=0x7f020001;
-        public static final int seek_thumb=0x7f020002;
-        public static final int seek_thumb_big=0x7f020003;
-        public static final int seek_thumb_normal=0x7f020004;
-        public static final int seek_thumb_normal_wide=0x7f020005;
-        public static final int seek_thumb_pressed=0x7f020006;
-        public static final int seek_thumb_pressed_big=0x7f020007;
-        public static final int seek_thumb_pressed_wide=0x7f020008;
-        public static final int seek_thumb_selected=0x7f020009;
-        public static final int seek_thumb_selected_big=0x7f02000a;
-        public static final int seek_thumb_selected_wide=0x7f02000b;
-        public static final int seek_thumb_wide=0x7f02000c;
+        public static final int bg=0x7f020000;
+        public static final int ic_launcher=0x7f020001;
+        public static final int progress_vertical=0x7f020002;
+        public static final int scrubber_control_focused_holo=0x7f020003;
+        public static final int scrubber_control_normal_holo=0x7f020004;
+        public static final int scrubber_control_pressed_holo=0x7f020005;
+        public static final int scrubber_primary_holo=0x7f020006;
+        public static final int scrubber_primary_holo_vertical=0x7f020007;
+        public static final int scrubber_progress_holo_dark=0x7f020008;
+        public static final int scrubber_progress_vertical_holo_dark=0x7f020009;
+        public static final int scrubber_secondary_holo=0x7f02000a;
+        public static final int scrubber_secondary_holo_vertical=0x7f02000b;
+        public static final int scrubber_track_holo_dark=0x7f02000c;
+        public static final int scrubber_track_holo_dark_vertical=0x7f02000d;
+        public static final int seek_holo=0x7f02000e;
+        public static final int seek_thumb=0x7f02000f;
+        public static final int seek_thumb_big=0x7f020010;
+        public static final int seek_thumb_normal=0x7f020011;
+        public static final int seek_thumb_normal_wide=0x7f020012;
+        public static final int seek_thumb_pressed=0x7f020013;
+        public static final int seek_thumb_pressed_big=0x7f020014;
+        public static final int seek_thumb_pressed_wide=0x7f020015;
+        public static final int seek_thumb_selected=0x7f020016;
+        public static final int seek_thumb_selected_big=0x7f020017;
+        public static final int seek_thumb_selected_wide=0x7f020018;
+        public static final int seek_thumb_wide=0x7f020019;
     }
     public static final class id {
-        public static final int Band1=0x7f050000;
-        public static final int Band2=0x7f050001;
-        public static final int Band3=0x7f050002;
-        public static final int Band4=0x7f050003;
-        public static final int Band5=0x7f050004;
-        public static final int linearLayout1=0x7f050006;
-        public static final int textView1=0x7f050005;
-        public static final int textView2=0x7f050007;
-        public static final int textView3=0x7f050008;
+        public static final int MainLayout=0x7f050000;
+        public static final int bb_checkbox=0x7f050003;
+        public static final int checkBox1=0x7f050005;
+        public static final int eq_checkbox=0x7f050001;
+        public static final int eq_space=0x7f050002;
+        public static final int seekBar1=0x7f050004;
+        public static final int seekBar2=0x7f050006;
     }
     public static final class layout {
         public static final int main=0x7f030000;
     }
     public static final class string {
+        public static final int EQ=0x7f040002;
         public static final int app_name=0x7f040001;
+        public static final int bass_boost=0x7f040003;
         public static final int hello=0x7f040000;
+        public static final int virtualizer=0x7f040004;
     }
     public static final class styleable {
         /** Attributes that can be used with a ProgressBar.

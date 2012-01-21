@@ -15,5 +15,8 @@ interface EqInterface {
 	void setVirtualizerEnabled(boolean isEnabled);
 	int getVirtualizerStrength();
 	void setVirtualizerStrength(int strength);
+	void usePreset(int preset);
+	void setProperties(String properties);
+	String getProperties();
 	boolean isRunning();
 }
