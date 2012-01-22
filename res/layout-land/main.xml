@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- This is the main.xml file that is used when the phone is in landscape mode -->
+
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/MainLayout"
             android:layout_width="match_parent"
@@ -38,6 +40,7 @@
 		        </LinearLayout>
 		    </LinearLayout>
 		    
+	        <!-- Divider (Vertical) -->
 	        <View
        			android:layout_height="fill_parent"
         		android:layout_width="2dp"

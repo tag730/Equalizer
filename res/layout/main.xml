@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!-- This is the main.xml file that is used when the phone is in portrait mode -->
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/MainLayout"
         android:layout_width="fill_parent"
@@ -22,11 +25,8 @@
             android:paddingRight="10dip" >
 
         </LinearLayout>
-            <!-- android:progressDrawable="@drawable/scrubber_progress_holo_dark"
-            android:thumb="@drawable/seek_holo" -->
-            <!-- android:progressDrawable="@drawable/scrubber_progress_holo_dark"
-            android:thumb="@drawable/seek_holo" -->
 
+        <!-- Divider (Horizontal) -->
 		<View
        		android:layout_height="2dp"
         	android:layout_width="fill_parent"

@@ -47,20 +47,27 @@ public class AudioEqualizerActivity extends Activity {
 	@Override
 	public void onPause() {
 		
+		// Access properties file named PREFS_NAME
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME,0);
 		SharedPreferences.Editor editor = settings.edit();
+		
 		String properties=null;
 		try {
 			properties = mService.getProperties();
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
+		
+		// If properties have been returned from EQ service
 		if(!(properties==null)){
+			// Save properties (last-used EQ settings) to properties file
 			editor.putString("lastEqSettings",properties);
 			editor.commit();			
 		}
 		
+		// Save off custom presets before closing
 		saveCustomPresets();
+		
 		// If our Activity is closing, we don't want to kill the Service, but we will unbind from it
 		if(mIsBound){
             // Detach our existing connection.
@@ -74,22 +81,27 @@ public class AudioEqualizerActivity extends Activity {
 	}
 	
 	private void saveCustomPresets() {
+		// Current implementation of custom presets, concatenated strings holding all of
+		// the names of the presets, and their EQ data
+		
+		// Begin with blank string
 		String customPresetString="";
+		
+		// For each custom preset that has been made
 		for(int i=0; i<customPresets.size();i++){
+			// add "NAME#SETTINGS$"
 			customPresetString+=customPresets.get(i).key+"#"+customPresets.get(i).value+"$";
 		}
-		Toast.makeText(this, customPresetString, Toast.LENGTH_LONG);
+		
+		// Open properties file for saving
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME,0);
 		SharedPreferences.Editor editor = settings.edit();
+		
+		// Save key-value pair where key is PRESETS_NAME and value is the
+		// concatenated string of presets
 		editor.putString(PRESETS_NAME, customPresetString);
 		editor.commit();
-	}
-
-	@Override
-	public void onStop() {
-		super.onStop();
-	}
-	
+	}	
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -103,7 +115,10 @@ public class AudioEqualizerActivity extends Activity {
         bindService(new Intent(EqService.class.getName()),
                 mConnection, Context.BIND_AUTO_CREATE);
         
+        // Initialize list that holds the custom presets
         customPresets=new ArrayList<EQData>();
+        
+        // Initialize list that holds the equalizer band seekbar objects
         mBands = new ArrayList<VerticalSeekBar>();
                 
         // Set to "bound"
@@ -111,26 +126,43 @@ public class AudioEqualizerActivity extends Activity {
     }
     
     private void populateCustomPresets() {
-		// To populate the stored values for key-value pair custom presets
-    	// from internal storage
+		// Current implementation reads in concatenated string of custom presets,
+    	// parses the data, and sets up the list of custom presets to be used
+    	// by the presetSpinner object
+    	
+    	String[] eqData; // to hold all preset name-value pairs
+    	String[] keyValuePair; // to hold one key-value pair (first element is key, second is value)
+    	String eqDataDelim="[$]+"; // Delimiter between key-value pairs
+    	String keyValuePairDelim="[#]+"; // Delimiter between each key and value
+    	
+    	// Access properties file
     	SharedPreferences settings = getSharedPreferences(PREFS_NAME,0);
+    	// Retrieve custom presets string from properties file
     	String customPresetString = settings.getString(PRESETS_NAME, "");
-    	String[] eqData;
-    	String[] keyValuePair;
-    	String eqDataDelim="[$]+";
-    	String keyValuePairDelim="[#]+";
+
 		if(!customPresetString.equals("")) {
+			// create array where each element is a string representing
+			// a key-value preset pair
 			eqData=customPresetString.split(eqDataDelim);
+			
+			// for each pair
 			for(int i=0; i<eqData.length; i++){
+				// split into array where first element is key, second is value
 				keyValuePair=eqData[i].split(keyValuePairDelim);
+				
+				// if there is no error is the string
 				if(keyValuePair.length==2){
+					// add preset to the customPreset list to be used by the
+					// GUI presetSpinner
 					customPresets.add(
 							new EQData(keyValuePair[0],keyValuePair[1])
 							);
 				}
 			}
 		} else {
+			// This is the case of the first time the program is installed
 			try {
+				// create one preset, the Default, which can't be deleted
 				customPresets.add(new EQData("Default",mService.getProperties()));
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
@@ -154,19 +186,26 @@ public class AudioEqualizerActivity extends Activity {
         	// Set our service object up as an interface, so we can use the methods
             mService = EqInterface.Stub.asInterface(service);
             
+            // Access properties file
             SharedPreferences settings = getSharedPreferences(PREFS_NAME,0);
+            // Retrieve last-used EQ settings (such as: before a reboot)
             String lastEqSettings = settings.getString("lastEqSettings", "");
             if( !lastEqSettings.equals("") ) {
+            	// If this isn't the first time a connection is made with the service...
             	try {
+            		// Try to access the service and give it the last-used EQ settings
 					mService.setProperties(lastEqSettings);
 				} catch (RemoteException e) {
 					e.printStackTrace();
 				}
             }
+            
+            // Set up presets from last save
             populateCustomPresets();
             
-            // Now that we can use the methods, we can set up our progressBars and other
-            // UI elements for the Equalizer
+            // Now that we can use the methods in the Service interface
+            // we can set up our progressBars and other UI elements for 
+            // the Equalizer / Bass Boost / Virtualizer
             setupUI();
         }
 
@@ -178,57 +217,73 @@ public class AudioEqualizerActivity extends Activity {
     };
     
     private void setupUI(){
-    	// Main linear layout, vertical
-//        mLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
-
-        // Set as main content view
+        // Set as main content view.
+    	// Separate xml files are used for portrait and landscape
+    	// (see res/layout and res/layout-land)
         setContentView(R.layout.main);       
-        mLinearLayout =  (LinearLayout) findViewById(R.id.MainLayout);
-        mSecondLinearLayout = (LinearLayout) findViewById(R.id.SecondLayout);
         
+        // Retrieve "main" linear layout from xml,
+        // which is used for EQ, BassBoost, and virtualizer
+        mLinearLayout =  (LinearLayout) findViewById(R.id.MainLayout);
+        
+        // Setup layout for presets, including the spinner
+        // and "new", "save", and "delete" buttons
         LinearLayout presets = new LinearLayout(this);
         presets.setOrientation(LinearLayout.HORIZONTAL);
         LinearLayout.LayoutParams presetsParams= new LinearLayout.LayoutParams(
-        		LayoutParams.FILL_PARENT,
-        		LayoutParams.WRAP_CONTENT);
+        		LayoutParams.FILL_PARENT, // take up full horizontal space
+        		LayoutParams.WRAP_CONTENT); // take up only as much vertical space as it needs
         presets.setLayoutParams(presetsParams);
+        
+        // Rest in the bottom-center of its container
         presets.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM);
         
+        // Set up spinner for presets (selection list)
         presetSpinner = new Spinner(this);
+        
+        // Set up adapter to link the spinner to the list of presets
         ArrayAdapter<EQData> myPresetsAdapter=new ArrayAdapter<EQData>(this,android.R.layout.simple_spinner_item,customPresets);
+        
+        // Setup up graphics for the dropdown items
         myPresetsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         presetSpinner.setAdapter(myPresetsAdapter);
         
+        // create the item-selected listener
         class MyOnItemSelectedListener implements OnItemSelectedListener {
 
             public void onItemSelected(AdapterView<?> parent,
                 View view, int pos, long id) {
             	try {
+            		// recall the properties from the selected preset
 					mService.setProperties(customPresets.get(pos).value);
 				} catch (RemoteException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+            	// update the equalizer, bassboost, virtualizer sliders
             	updateUI();
             }
 
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
         }        
         
+        // Use the listener created above with the spinner 
         presetSpinner.setOnItemSelectedListener(new MyOnItemSelectedListener());
         
+        // Set up a button to create a new preset and make it active
         Button newPresetButton = new Button(this);
         newPresetButton.setText("New");
         newPresetButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
 				try {
+					// Add preset object to the presets list, using current settings
 					customPresets.add(
 							new EQData(Integer.toString(presetSpinner.getAdapter().getCount()),
 							mService.getProperties())
 							);
+					// Set this new preset as the active preset
 					presetSpinner.setSelection(presetSpinner.getAdapter().getCount()-1);
 				} catch (RemoteException e) {
 					e.printStackTrace();
@@ -236,11 +291,14 @@ public class AudioEqualizerActivity extends Activity {
 			}
         });
         
+        // Set up a button to save the currently-selected preset
+        // using the current eq / bassboost / virtualizer settings
         Button savePresetButton = new Button(this);
         savePresetButton.setText("Save");
         savePresetButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
+				// Set "value" of preset (EQ data) to the current EQ data
 				try {
 					customPresets.get(presetSpinner.getSelectedItemPosition()).value=mService.getProperties();
 				} catch (RemoteException e) {
@@ -249,22 +307,28 @@ public class AudioEqualizerActivity extends Activity {
 			}
         });
         
+        // Set up a button to delete the currently-selected preset
+        // and activate the preset that precedes it in the presets list
         Button deletePresetButton = new Button(this);
         deletePresetButton.setText("Delete");
         deletePresetButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
+				// Cannot delete "default" preset
 				if(presetSpinner.getSelectedItemPosition()!=0) {
+					// delete selected preset
 					customPresets.remove(presetSpinner.getSelectedItemPosition());
 				}
+				// activate preceding preset in the presets list
 				presetSpinner.setSelection(presetSpinner.getSelectedItemPosition()-1);
 			}
 		});
+        // Add the spinner and buttons to the horizontal linear layout, to be added to the
+        // main layout later on
         presets.addView(presetSpinner);
         presets.addView(savePresetButton);
         presets.addView(deletePresetButton);
         presets.addView(newPresetButton);
-//        mLinearLayout.addView(presets);
         
 
         // short value representing number of bands supported by Android Audio Engine
@@ -276,16 +340,8 @@ public class AudioEqualizerActivity extends Activity {
 			// get number of supported bands
 			bands = (short)mService.getNumberOfBands();	
 
-//            LinearLayout row = new LinearLayout(this);
-//            row.setOrientation(LinearLayout.HORIZONTAL);
-//            LinearLayout.LayoutParams myParams =new LinearLayout.LayoutParams(
-//                    LinearLayout.LayoutParams.FILL_PARENT,
-//                    LinearLayout.LayoutParams.WRAP_CONTENT);
-//            myParams.gravity=Gravity.TOP;
-////            myParams.height=400;
-//            myParams.weight=1f;
-//            row.setLayoutParams(myParams);
-			LinearLayout row = (LinearLayout) findViewById(R.id.eq_space);
+			// Retrieve linear layout for EQ sliders
+			LinearLayout eqLayout = (LinearLayout) findViewById(R.id.eq_space);
 			
 			// for each of the supported bands, we will set up a slider from -10dB to 10dB boost/attenuation,
 			// as well as text labels to assist the user
@@ -297,35 +353,46 @@ public class AudioEqualizerActivity extends Activity {
 	            LinearLayout.LayoutParams tvParams = new LinearLayout.LayoutParams(
 	                    ViewGroup.LayoutParams.WRAP_CONTENT,
 	                    ViewGroup.LayoutParams.WRAP_CONTENT);
-//	            tvParams.weight=1;
-	            tvParams.gravity=Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM;
+	            
+	            // Make the frequency label lie in the bottom-center of its container
+	            freqTextView.setGravity(Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL);
 	            freqTextView.setLayoutParams(tvParams);
-//	            freqTextView.setGravity(Gravity.CENTER_HORIZONTAL);
+	            
+	            // Abbreviate Hz to kHz if the value 1000 Hz or more
 	            if( (mService.getCenterFreq((int)band) / 1000) < 1000 ) {
 	            	freqTextView.setText(Integer.toString((mService.getCenterFreq((int)band) / 1000)));
 	            } else {
 	            	freqTextView.setText((mService.getCenterFreq((int)band) / 1000000) + "k");
 	            }
 	
-	            // now we have a 3-part linearlayout, consisting of lower dB limit label,
-	            // then the slider bar (SeekBar), then the higher dB limit text label
-	            LinearLayout col= new LinearLayout(this);
-	            col.setOrientation(LinearLayout.VERTICAL);
-	            col.setLayoutParams(new LinearLayout.LayoutParams(
-	                    0,ViewGroup.LayoutParams.FILL_PARENT,1f));
+	            // Set up vertical linearlayout to hold the Eq slider and freq label
+	            LinearLayout eqSlider= new LinearLayout(this);
+	            eqSlider.setOrientation(LinearLayout.VERTICAL);
+	            eqSlider.setLayoutParams(new LinearLayout.LayoutParams(
+	                    0, // Trick for splitting width evenly
+	                       // set width = 0 and weight = 1 for all elements
+	                    ViewGroup.LayoutParams.FILL_PARENT, // take up all 
+	                               // available vertical space in container
+	                    1f)); // Set weight = 1
 	            
-	            col.setWeightSum(1f);
+	            eqSlider.setWeightSum(1f); // Total sum of weights inside the container is 1
 
 	            
-	            // Set up SeekBar for this band	            
+	            // Set up EQ slider for this band	            
 	            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-	                    LayoutParams.WRAP_CONTENT,
-	                    0);
-	            layoutParams.weight = 1f;
+	                    LayoutParams.WRAP_CONTENT, // only take up as much horizontal space 
+	                                               // as is needed
+	                    LayoutParams.FILL_PARENT); // Take up all available vertical space
+	            // Position in bottom-center of container
 	            layoutParams.gravity=Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL;
+	            
+	            // set up vertical slider for EQ
 	            VerticalSeekBar bar = new VerticalSeekBar(this);
 	            bar.setLayoutParams(layoutParams);	 
+	            
+	            // Use custom progess graphic from Ice Cream Sandwich
 	            bar.setProgressDrawable(getResources().getDrawable(R.drawable.scrubber_progress_vertical_holo_dark));
+	            // Use custom Thumb drawable from Ice Cream Sandwich
 	            bar.setThumb(getResources().getDrawable(R.drawable.seek_holo));
 	            // Assign the seekbar the appropriate max value
 	            bar.setMax(mService.getBandLevelHigh() - mService.getBandLevelLow());
@@ -351,12 +418,10 @@ public class AudioEqualizerActivity extends Activity {
 	            
 	            mBands.add(bar);
 	
-	            // Add in the two textviews and seekbar
-//	            col.addView(maxDbTextView);
-	            col.addView(bar);
-	            col.addView(freqTextView);
-//	            col.addView(minDbTextView);
-	            row.addView(col);
+	            eqSlider.addView(bar);
+	            eqSlider.addView(freqTextView);
+
+	            eqLayout.addView(eqSlider);
 	        }	
 	        LinearLayout Bounds= new LinearLayout(this);
 	        Bounds.setOrientation(LinearLayout.VERTICAL);
@@ -395,11 +460,8 @@ public class AudioEqualizerActivity extends Activity {
             Bounds.addView(midDbTextView);
             Bounds.addView(minDbTextView);
             
-            row.addView(Bounds);
-//            row.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg));
-            // Add the total band into the main linearlayout
-//            mLinearLayout.setWeightSum(2f);
-//            mLinearLayout.addView(row);
+            eqLayout.addView(Bounds);
+
             mLinearLayout.addView(presets);
             
             SeekBar mBassBoost = (SeekBar) findViewById(R.id.bb_seekbar);
