@@ -21,6 +21,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,6 +35,7 @@ public class AudioEqualizerActivity extends Activity {
 	
 	// Using LinearLayout instead of R.layout.main (main.xml)
 	LinearLayout mLinearLayout;
+	LinearLayout mSecondLinearLayout;
 	Spinner presetSpinner;
 	
 	// mService is the object for using interface methods
@@ -182,6 +184,7 @@ public class AudioEqualizerActivity extends Activity {
         // Set as main content view
         setContentView(R.layout.main);       
         mLinearLayout =  (LinearLayout) findViewById(R.id.MainLayout);
+        mSecondLinearLayout = (LinearLayout) findViewById(R.id.SecondLayout);
         
         LinearLayout presets = new LinearLayout(this);
         presets.setOrientation(LinearLayout.HORIZONTAL);
@@ -189,6 +192,7 @@ public class AudioEqualizerActivity extends Activity {
         		LayoutParams.FILL_PARENT,
         		LayoutParams.WRAP_CONTENT);
         presets.setLayoutParams(presetsParams);
+        presets.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM);
         
         presetSpinner = new Spinner(this);
         ArrayAdapter<EQData> myPresetsAdapter=new ArrayAdapter<EQData>(this,android.R.layout.simple_spinner_item,customPresets);
@@ -397,7 +401,17 @@ public class AudioEqualizerActivity extends Activity {
 //            mLinearLayout.setWeightSum(2f);
 //            mLinearLayout.addView(row);
             mLinearLayout.addView(presets);
-	        
+            
+            SeekBar mBassBoost = (SeekBar) findViewById(R.id.bb_seekbar);
+            mBassBoost.setProgressDrawable(getResources().getDrawable(R.drawable.scrubber_progress_holo_dark));
+            mBassBoost.setThumb(getResources().getDrawable(R.drawable.seek_holo));
+            mBassBoost.setPadding(32, 0, 32, 20);
+            
+            SeekBar mVirtualizer = (SeekBar) findViewById(R.id.v_seekbar);
+            mVirtualizer.setProgressDrawable(getResources().getDrawable(R.drawable.scrubber_progress_holo_dark));
+            mVirtualizer.setThumb(getResources().getDrawable(R.drawable.seek_holo));
+            mVirtualizer.setPadding(32, 0, 32, 20);
+            
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}

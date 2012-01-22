@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/MainLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+        
+	    <LinearLayout
+	        android:id="@+id/Top"
+	        android:layout_width="match_parent"
+	        android:layout_height="0dip"
+	        android:layout_weight="1"
+	        android:paddingBottom="10dip"
+	        android:weightSum="2" >
+        
+	        <LinearLayout
+		        android:id="@+id/linearLayout2"
+		        android:layout_width="0dp"
+		        android:layout_height="match_parent"
+		        android:layout_weight="1"
+		        android:orientation="vertical" >
+	
+		        <CheckBox
+		            android:id="@+id/eq_checkbox"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:text="@string/EQ" />
+	
+		        <LinearLayout
+		            android:id="@+id/eq_space"
+		            android:layout_width="match_parent"
+		            android:layout_height="wrap_content"
+		            android:layout_weight="2"
+		            android:paddingBottom="20dip"
+		            android:paddingLeft="10dip"
+		            android:paddingRight="10dip" >
+		        </LinearLayout>
+		    </LinearLayout>
+		    
+	        <View
+       			android:layout_height="fill_parent"
+        		android:layout_width="2dp"
+        		android:background="#88404040" />
+	
+		    <LinearLayout
+		        android:id="@+id/SecondLayout"
+		        android:layout_width="0dip"
+		        android:layout_height="match_parent"
+		        android:paddingLeft="8dip"
+		        android:layout_weight="1"
+		        android:orientation="vertical" >
+	
+		        <CheckBox
+		            android:id="@+id/bb_checkbox"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:text="@string/bass_boost" />
+	
+		        <SeekBar
+		            android:id="@+id/bb_seekbar"
+		            android:layout_width="match_parent"
+		            android:layout_height="wrap_content"/>
+		            <!-- android:progressDrawable="@drawable/scrubber_progress_holo_dark"
+		            android:thumb="@drawable/seek_holo" /> -->
+	
+		        <CheckBox
+		            android:id="@+id/v_checkbox"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:text="@string/virtualizer" />
+	
+		        <SeekBar
+		            android:id="@+id/v_seekbar"
+		            android:layout_width="match_parent"
+		            android:layout_height="wrap_content"/>
+		            <!-- android:progressDrawable="@drawable/scrubber_progress_holo_dark"
+		            android:thumb="@drawable/seek_holo" /> -->
+		    </LinearLayout>
+	
+	    </LinearLayout>	
+	    
+   	</LinearLayout>
