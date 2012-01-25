@@ -5,10 +5,10 @@ import android.content.Intent;
 import android.media.audiofx.BassBoost;
 import android.media.audiofx.Equalizer;
 import android.media.audiofx.Virtualizer;
+import android.media.audiofx.Visualizer;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
-import android.widget.Toast;
 
 public class EqService extends Service {
 	
@@ -20,6 +20,7 @@ public class EqService extends Service {
 	  // BassBoost and Virtualizer not currently being implemented
 	  private BassBoost mBassBoost;
 	  private Virtualizer mVirtualizer;
+//	  private Visualizer mVisualizer;
 	  private int maxLevel, minLevel;
 	  // isRunning currently not being used
       public static boolean isRunning;
@@ -43,6 +44,7 @@ public class EqService extends Service {
 	      mBassBoost=new BassBoost(10,0);
 	      // Setup a "Virtualizer" object with priority=10, and audio session id=0 (global)
 	      mVirtualizer=new Virtualizer(10,0);
+//	      mVisualizer = new Visualizer(0);
 	      
 	      // Set up variables for max boost/attenuation for the bands of the equalizer
 		  maxLevel=(int)myEq.getBandLevelRange()[1];

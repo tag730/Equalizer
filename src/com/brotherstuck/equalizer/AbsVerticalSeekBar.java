@@ -9,6 +9,8 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
+import android.widget.Toast;
+
 import com.brotherstuck.equalizer.R.drawable;
 
 public class AbsVerticalSeekBar extends VerticalProgressBar{

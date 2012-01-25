@@ -1,0 +1,10 @@
+# GIMP themerc
+#
+# This file is written on GIMP startup and on every theme change.
+# It is NOT supposed to be edited manually. Edit your personal
+# gtkrc file instead (c:\users\adam\workspace\AudioEqualizer\.gimp-2.6\gtkrc).
+
+include "C:\\Program Files (x86)\\GIMP-2.0\\share\\gimp\\2.0\\themes\\Default\\gtkrc"
+include "c:\\users\\adam\\workspace\\AudioEqualizer\\.gimp-2.6\\gtkrc"
+
+# end of themerc

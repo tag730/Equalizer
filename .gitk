@@ -1,0 +1,36 @@
+set mainfont {Helvetica 9}
+set textfont {Courier 9}
+set uifont {Helvetica 9 bold}
+set tabstop 8
+set findmergefiles 0
+set maxgraphpct 50
+set maxwidth 16
+set cmitmode patch
+set wrapcomment none
+set autoselect 1
+set autosellen 40
+set showneartags 1
+set hideremotes 0
+set showlocalchanges 1
+set datetimeformat {%Y-%m-%d %H:%M:%S}
+set limitdiffs 1
+set uicolor SystemButtonFace
+set want_ttk 1
+set bgcolor SystemWindow
+set fgcolor SystemButtonText
+set colors {green red blue magenta darkgrey brown orange}
+set diffcolors {red "#00a000" blue}
+set markbgcolor #e0e0ff
+set diffcontext 3
+set selectbgcolor SystemHighlight
+set extdifftool meld
+set perfile_attrs 0
+set geometry(main) 1207x722+25+0
+set geometry(state) normal
+set geometry(topwidth) 1207
+set geometry(topheight) 225
+set geometry(pwsash0) "440 1"
+set geometry(pwsash1) "660 1"
+set geometry(botwidth) 550
+set geometry(botheight) 492
+set permviews {}

@@ -8,9 +8,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.media.audiofx.Visualizer;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -24,7 +26,6 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class AudioEqualizerActivity extends Activity {
 	
@@ -32,6 +33,9 @@ public class AudioEqualizerActivity extends Activity {
 	public static final String PRESETS_NAME = "CustomPresetsFile";
 	ArrayList<EQData> customPresets;
 	ArrayList<VerticalSeekBar> mBands;
+    VisualizerView mVisualizerView;
+    Visualizer mVisualizer;
+    private int fourth=0;
 	
 	// Using LinearLayout instead of R.layout.main (main.xml)
 	LinearLayout mLinearLayout;
@@ -53,7 +57,9 @@ public class AudioEqualizerActivity extends Activity {
 		
 		String properties=null;
 		try {
-			properties = mService.getProperties();
+			if (mService!=null){
+				properties = mService.getProperties();				
+			}
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
@@ -63,6 +69,10 @@ public class AudioEqualizerActivity extends Activity {
 			// Save properties (last-used EQ settings) to properties file
 			editor.putString("lastEqSettings",properties);
 			editor.commit();			
+		}
+		
+		if (mVisualizer!=null) {
+			mVisualizer.setEnabled(false);
 		}
 		
 		// Save off custom presets before closing
@@ -78,6 +88,12 @@ public class AudioEqualizerActivity extends Activity {
 		
 		// Call parent class's "onPause()"
 		super.onPause();
+	}
+	
+	@Override
+	public void onStop(){
+		super.onStop();
+		mVisualizer.release();
 	}
 	
 	private void saveCustomPresets() {
@@ -122,7 +138,11 @@ public class AudioEqualizerActivity extends Activity {
         mBands = new ArrayList<VerticalSeekBar>();
                 
         // Set to "bound"
-        mIsBound = true;        
+        mIsBound = true;     
+        
+        if(mVisualizer!=null){
+        	mVisualizer.setEnabled(true);
+        }
     }
     
     private void populateCustomPresets() {
@@ -355,7 +375,7 @@ public class AudioEqualizerActivity extends Activity {
 	                    ViewGroup.LayoutParams.WRAP_CONTENT);
 	            
 	            // Make the frequency label lie in the bottom-center of its container
-	            freqTextView.setGravity(Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL);
+	            tvParams.gravity=Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL;
 	            freqTextView.setLayoutParams(tvParams);
 	            
 	            // Abbreviate Hz to kHz if the value 1000 Hz or more
@@ -382,13 +402,14 @@ public class AudioEqualizerActivity extends Activity {
 	            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
 	                    LayoutParams.WRAP_CONTENT, // only take up as much horizontal space 
 	                                               // as is needed
-	                    LayoutParams.FILL_PARENT); // Take up all available vertical space
+	                    0, 1f); // Take up all available vertical space
 	            // Position in bottom-center of container
+	            layoutParams.setMargins(0, -10, 0, -10);
 	            layoutParams.gravity=Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL;
 	            
 	            // set up vertical slider for EQ
 	            VerticalSeekBar bar = new VerticalSeekBar(this);
-	            bar.setLayoutParams(layoutParams);	 
+	            bar.setLayoutParams(layoutParams);
 	            
 	            // Use custom progess graphic from Ice Cream Sandwich
 	            bar.setProgressDrawable(getResources().getDrawable(R.drawable.scrubber_progress_vertical_holo_dark));
@@ -399,6 +420,8 @@ public class AudioEqualizerActivity extends Activity {
 	            // Apply the current value to the seekbar
 	            bar.setProgress(mService.getBandLevel((int)band)-mService.getBandLevelLow());
 	            
+	            bar.mPaddingTop=32;
+	            bar.mPaddingBottom=32;
 	
 	            // Set up so that when seekbar changes for a certain band, we update the
 	            // actual value of the band in our Equalizer object in the EqService class
@@ -417,7 +440,7 @@ public class AudioEqualizerActivity extends Activity {
 	            });
 	            
 	            mBands.add(bar);
-	
+
 	            eqSlider.addView(bar);
 	            eqSlider.addView(freqTextView);
 
@@ -433,7 +456,7 @@ public class AudioEqualizerActivity extends Activity {
 	        LinearLayout.LayoutParams paramsMin =new LinearLayout.LayoutParams(
 	        		LayoutParams.WRAP_CONTENT, 0);
             TextView minDbTextView = new TextView(this);
-//            paramsMin.gravity=Gravity.BOTTOM;
+            paramsMin.bottomMargin=25;
             paramsMin.weight=1f;
             minDbTextView.setGravity(Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL);
             minDbTextView.setLayoutParams(paramsMin);
@@ -442,8 +465,8 @@ public class AudioEqualizerActivity extends Activity {
 	        LinearLayout.LayoutParams paramsMid =new LinearLayout.LayoutParams(
 	        		LayoutParams.WRAP_CONTENT, 0);
             TextView midDbTextView = new TextView(this);
-//            paramsMin.gravity=Gravity.BOTTOM;
             paramsMid.weight=1f;
+            paramsMid.topMargin=-5;
             midDbTextView.setGravity(Gravity.CENTER);
             midDbTextView.setLayoutParams(paramsMid);
             midDbTextView.setText("0 dB");
@@ -453,12 +476,25 @@ public class AudioEqualizerActivity extends Activity {
 	        LinearLayout.LayoutParams paramsMax =new LinearLayout.LayoutParams(
 	        		LayoutParams.WRAP_CONTENT, 0);
             paramsMax.weight=1f;
+            paramsMax.topMargin=5;
             maxDbTextView.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL);
             maxDbTextView.setLayoutParams(paramsMax);
             maxDbTextView.setText((mService.getBandLevelHigh() / 100) + " dB");
+            
+            TextView dummyView = new TextView(this);
+	        LinearLayout.LayoutParams dummyParams =new LinearLayout.LayoutParams(
+	        		LayoutParams.WRAP_CONTENT,
+	        		LayoutParams.WRAP_CONTENT);
+	        dummyView.setLayoutParams(dummyParams);
+	        dummyView.setText("");
+	        
             Bounds.addView(maxDbTextView);
             Bounds.addView(midDbTextView);
             Bounds.addView(minDbTextView);
+            Bounds.addView(dummyView);
+            
+
+            
             
             eqLayout.addView(Bounds);
 
@@ -473,6 +509,32 @@ public class AudioEqualizerActivity extends Activity {
             mVirtualizer.setProgressDrawable(getResources().getDrawable(R.drawable.scrubber_progress_holo_dark));
             mVirtualizer.setThumb(getResources().getDrawable(R.drawable.seek_holo));
             mVirtualizer.setPadding(32, 0, 32, 20);
+            
+            
+            // Create a VisualizerView (defined below), which will render the simplified audio
+            // wave form to a Canvas.
+            mVisualizerView = new VisualizerView(this);
+            mVisualizerView.setLayoutParams(new ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.FILL_PARENT,
+                    (int)(100 * getResources().getDisplayMetrics().density)));
+            mLinearLayout.addView(mVisualizerView);
+
+            // Create the Visualizer object and attach it to our media player.
+            mVisualizer = new Visualizer(0);
+//            mVisualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
+            mVisualizer.setCaptureSize(1000);
+            mVisualizer.setDataCaptureListener(new Visualizer.OnDataCaptureListener() {
+                public void onWaveFormDataCapture(Visualizer visualizer, byte[] bytes,
+                        int samplingRate) {}
+
+                public void onFftDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {
+                	mVisualizerView.updateVisualizer(bytes);
+                	Log.i(this.getClass().getSimpleName(), Integer.toString(samplingRate));
+                }
+            }, Visualizer.getMaxCaptureRate(), false, true);
+
+            mVisualizer.setEnabled(true);
+            
             
 		} catch (RemoteException e) {
 			e.printStackTrace();
