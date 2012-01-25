@@ -36,18 +36,25 @@
             (dockable "gimp-gradient-list"
                 (tab-style preview)))))
 (session-info "toolbox" "dock"
-    (position 0 18)
-    (size 160 746)
+    (position 0 51)
+    (size 160 721)
     (open-on-exit)
     (dock
         (book
             (current-page 0)
             (dockable "gimp-tool-options"
                 (tab-style icon)))))
+(session-info "toplevel" "gimp-image-new-dialog"
+    (position 130 130))
+(session-info "toplevel" "gimp-file-save-dialog"
+    (position 233 14)
+    (size 890 742))
+(session-info "toplevel" "gimp-toolbox-color-dialog"
+    (position 0 0))
 (session-info "display" "gimp-empty-image-window"
-    (position 377 67)
-    (size 479 180))
+    (position 350 272)
+    (size 479 127))
 
-(last-tip-shown 2)
+(last-tip-shown 5)
 
 # end of sessionrc

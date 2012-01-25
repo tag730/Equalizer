@@ -78,6 +78,13 @@
 		            android:layout_height="wrap_content"/>
 		            <!-- android:progressDrawable="@drawable/scrubber_progress_holo_dark"
 		            android:thumb="@drawable/seek_holo" /> -->
+
+		        <LinearLayout
+		            android:id="@+id/vis_space"
+		            android:layout_width="match_parent"
+		            android:layout_height="fill_parent" >
+		        </LinearLayout>
+
 		    </LinearLayout>
 	
 	    </LinearLayout>	

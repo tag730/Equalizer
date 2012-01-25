@@ -33,9 +33,11 @@ public class AudioEqualizerActivity extends Activity {
 	public static final String PRESETS_NAME = "CustomPresetsFile";
 	ArrayList<EQData> customPresets;
 	ArrayList<VerticalSeekBar> mBands;
-    VisualizerView mVisualizerView;
+    LinearLayout mVisualizerView;
     Visualizer mVisualizer;
-    private int fourth=0;
+    private final float EXPONENT=1.5f;
+    private ArrayList<VerticalProgressBar> visBars;
+    private int mDivisions;
 	
 	// Using LinearLayout instead of R.layout.main (main.xml)
 	LinearLayout mLinearLayout;
@@ -93,7 +95,6 @@ public class AudioEqualizerActivity extends Activity {
 	@Override
 	public void onStop(){
 		super.onStop();
-		mVisualizer.release();
 	}
 	
 	private void saveCustomPresets() {
@@ -136,10 +137,15 @@ public class AudioEqualizerActivity extends Activity {
         
         // Initialize list that holds the equalizer band seekbar objects
         mBands = new ArrayList<VerticalSeekBar>();
+        visBars = new ArrayList<VerticalProgressBar>();
                 
         // Set to "bound"
         mIsBound = true;     
-        
+    }
+    
+    @Override
+    public void onResume() {
+    	super.onResume();
         if(mVisualizer!=null){
         	mVisualizer.setEnabled(true);
         }
@@ -245,6 +251,7 @@ public class AudioEqualizerActivity extends Activity {
         // Retrieve "main" linear layout from xml,
         // which is used for EQ, BassBoost, and virtualizer
         mLinearLayout =  (LinearLayout) findViewById(R.id.MainLayout);
+        mSecondLinearLayout=(LinearLayout) findViewById(R.id.SecondLayout);
         
         // Setup layout for presets, including the spinner
         // and "new", "save", and "delete" buttons
@@ -503,43 +510,85 @@ public class AudioEqualizerActivity extends Activity {
             SeekBar mBassBoost = (SeekBar) findViewById(R.id.bb_seekbar);
             mBassBoost.setProgressDrawable(getResources().getDrawable(R.drawable.scrubber_progress_holo_dark));
             mBassBoost.setThumb(getResources().getDrawable(R.drawable.seek_holo));
-            mBassBoost.setPadding(32, 0, 32, 20);
+            mBassBoost.setPadding(32, 0, 32, 10);
             
             SeekBar mVirtualizer = (SeekBar) findViewById(R.id.v_seekbar);
             mVirtualizer.setProgressDrawable(getResources().getDrawable(R.drawable.scrubber_progress_holo_dark));
             mVirtualizer.setThumb(getResources().getDrawable(R.drawable.seek_holo));
-            mVirtualizer.setPadding(32, 0, 32, 20);
+            mVirtualizer.setPadding(32, 0, 32, 10);
             
             
             // Create a VisualizerView (defined below), which will render the simplified audio
             // wave form to a Canvas.
-            mVisualizerView = new VisualizerView(this);
-            mVisualizerView.setLayoutParams(new ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.FILL_PARENT,
-                    (int)(100 * getResources().getDisplayMetrics().density)));
-            mLinearLayout.addView(mVisualizerView);
+//            mVisualizerView = new VisualizerView(this);
+//            mVisualizerView.setLayoutParams(new ViewGroup.LayoutParams(
+//                    ViewGroup.LayoutParams.FILL_PARENT,
+//                    (int)(50 * getResources().getDisplayMetrics().density)));
+//            mSecondLinearLayout.addView(mVisualizerView);
 
             // Create the Visualizer object and attach it to our media player.
             mVisualizer = new Visualizer(0);
 //            mVisualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
-            mVisualizer.setCaptureSize(1000);
+            mVisualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
             mVisualizer.setDataCaptureListener(new Visualizer.OnDataCaptureListener() {
                 public void onWaveFormDataCapture(Visualizer visualizer, byte[] bytes,
                         int samplingRate) {}
 
                 public void onFftDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {
-                	mVisualizerView.updateVisualizer(bytes);
-                	Log.i(this.getClass().getSimpleName(), Integer.toString(samplingRate));
+                	updateVisualizer(bytes);
+//                	Log.i(this.getClass().getSimpleName(), Integer.toString(samplingRate));
                 }
             }, Visualizer.getMaxCaptureRate(), false, true);
 
             mVisualizer.setEnabled(true);
             
+            mVisualizerView = (LinearLayout) findViewById(R.id.vis_space);
+            mDivisions = (int)(Math.log(mVisualizer.getCaptureSize()/2)/Math.log(EXPONENT))-1;
+            visBars.clear();
+            for( int i=0; i<mDivisions; i++ ){
+            	VerticalProgressBar mBar = new VerticalProgressBar(this);
+            	mBar.setProgressDrawable(getResources().getDrawable(R.drawable.visbar_progress));
+            	mBar.setProgress(0);
+            	LinearLayout.LayoutParams mBarParams = new LinearLayout.LayoutParams(
+            			0, LayoutParams.FILL_PARENT,1f);
+            	mBar.setLayoutParams(mBarParams);
+            	visBars.add(mBar);
+            	mVisualizerView.addView(mBar);            	
+            }           
             
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
     }
+
+	protected void updateVisualizer(byte[] bytes) {        
+		// we will update each slider with the current Fourier Transform data
+        for (int i = 0; i < visBars.size(); i++) { 
+        	int sum, count, avg;
+        	sum=0;
+        	count=0;
+        	for (int j=(int) Math.pow(EXPONENT,i); j<=(int) Math.pow(EXPONENT,i+1);j++){
+            	byte rfk = bytes[2*j];
+            	byte ifk = bytes[2*j+1];
+            	int magnitude = (rfk*rfk + ifk*ifk);
+            	sum+=magnitude;
+            	count++;
+        	}
+        	avg = sum/count;
+        	int dbValue = (int)(10*Math.log10(avg));
+        	
+//////////////// COMMENTED OUT BLOCK USED FOR _NO AVERAGING_ /////////////////
+//        	int j = i+1;
+//        	byte rfk = bytes[2*((int) Math.pow(EXPONENT,j)-1)];
+//        	byte ifk = bytes[2*((int) Math.pow(EXPONENT,j)-1)+1];
+//        	int magnitude = (rfk*rfk + ifk*ifk);
+//        	int dbValue = (int)(10*Math.log10(magnitude));
+//        	Log.i("AudioEqualizerActivity",Integer.toString(dbValue));
+//////////////////////////////////////////////////////////////////////////////
+        	
+        	visBars.get(i).setProgress(dbValue*2);
+        }
+	}
 
 	public void updateUI() {
 		for(int i=0; i<mBands.size(); i++){
