@@ -81,4 +81,74 @@
       </metadata>
     </info>
   </bookmark>
+  <bookmark href="file:///C:/Users/Adam/Desktop/Icon.png" added="2012-01-26T14:52:15Z" modified="2012-01-26T14:54:50Z" visited="2012-01-26T14:52:15Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="image/png"/>
+        <bookmark:groups>
+          <bookmark:group>Graphics</bookmark:group>
+        </bookmark:groups>
+        <bookmark:applications>
+          <bookmark:application name="inkscape.exe" exec="&apos;inkscape.exe %u&apos;" modified="2012-01-26T14:54:50Z" count="2"/>
+          <bookmark:application name="GNU Image Manipulation Program" exec="&apos;gimp-2.6 %u&apos;" modified="2012-01-26T14:53:56Z" count="2"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///C:/Users/Adam/Pictures/TuckerFender.svg" added="2012-01-28T14:36:06Z" modified="2012-01-29T20:28:02Z" visited="2012-01-28T14:36:06Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="application/x-ext-svg"/>
+        <bookmark:applications>
+          <bookmark:application name="inkscape.exe" exec="&apos;inkscape.exe %u&apos;" modified="2012-01-29T20:28:02Z" count="2"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///C:/Users/Adam/Documents/Docs/Tucker_Fender.png" added="2012-01-28T17:10:38Z" modified="2012-01-29T20:31:53Z" visited="2012-01-28T17:10:38Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="image/png"/>
+        <bookmark:groups>
+          <bookmark:group>Graphics</bookmark:group>
+        </bookmark:groups>
+        <bookmark:applications>
+          <bookmark:application name="GNU Image Manipulation Program" exec="&apos;gimp-2.6 %u&apos;" modified="2012-01-29T20:31:53Z" count="2"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///C:/Users/Adam/Documents/Docs/Tucker_Fender.jpg" added="2012-01-28T17:14:54Z" modified="2012-01-28T17:14:54Z" visited="2012-01-28T17:14:54Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="image/jpeg"/>
+        <bookmark:groups>
+          <bookmark:group>Graphics</bookmark:group>
+        </bookmark:groups>
+        <bookmark:applications>
+          <bookmark:application name="GNU Image Manipulation Program" exec="&apos;gimp-2.6 %u&apos;" modified="2012-01-28T17:14:54Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///C:/Users/Adam/Dropbox/Docs/TuckerFender.svg" added="2012-01-29T20:32:51Z" modified="2012-01-29T20:32:51Z" visited="2012-01-29T20:32:53Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="application/x-ext-svg"/>
+        <bookmark:applications>
+          <bookmark:application name="inkscape.exe" exec="&apos;inkscape.exe %u&apos;" modified="2012-01-29T20:32:51Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///C:/Users/Adam/Documents/Docs/TuckerFender.svg" added="2012-01-29T20:33:14Z" modified="2012-01-29T20:33:14Z" visited="2012-01-29T20:33:14Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="application/x-ext-svg"/>
+        <bookmark:applications>
+          <bookmark:application name="Inkscape.exe" exec="&apos;Inkscape.exe %u&apos;" modified="2012-01-29T20:33:14Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
 </xbel>

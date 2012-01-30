@@ -36,7 +36,7 @@ public class AudioEqualizerActivity extends Activity {
     LinearLayout mVisualizerView;
     Visualizer mVisualizer;
     private final float EXPONENT=1.5f;
-    private ArrayList<VerticalProgressBar> visBars;
+    private ArrayList<AudioBar> visBars;
     private int mDivisions;
 	
 	// Using LinearLayout instead of R.layout.main (main.xml)
@@ -137,7 +137,7 @@ public class AudioEqualizerActivity extends Activity {
         
         // Initialize list that holds the equalizer band seekbar objects
         mBands = new ArrayList<VerticalSeekBar>();
-        visBars = new ArrayList<VerticalProgressBar>();
+        visBars = new ArrayList<AudioBar>();
                 
         // Set to "bound"
         mIsBound = true;     
@@ -529,7 +529,8 @@ public class AudioEqualizerActivity extends Activity {
             // Create the Visualizer object and attach it to our media player.
             mVisualizer = new Visualizer(0);
 //            mVisualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
-            mVisualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
+            mVisualizer.setEnabled(false);
+            mVisualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);            	
             mVisualizer.setDataCaptureListener(new Visualizer.OnDataCaptureListener() {
                 public void onWaveFormDataCapture(Visualizer visualizer, byte[] bytes,
                         int samplingRate) {}
@@ -552,7 +553,7 @@ public class AudioEqualizerActivity extends Activity {
             	LinearLayout.LayoutParams mBarParams = new LinearLayout.LayoutParams(
             			0, LayoutParams.FILL_PARENT,1f);
             	mBar.setLayoutParams(mBarParams);
-            	visBars.add(mBar);
+            	visBars.add(new AudioBar(mBar));
             	mVisualizerView.addView(mBar);            	
             }           
             
@@ -575,7 +576,7 @@ public class AudioEqualizerActivity extends Activity {
             	count++;
         	}
         	avg = sum/count;
-        	int dbValue = (int)(10*Math.log10(avg));
+        	int dbValue = (int)(20*Math.log10(avg));
         	
 //////////////// COMMENTED OUT BLOCK USED FOR _NO AVERAGING_ /////////////////
 //        	int j = i+1;
@@ -585,8 +586,7 @@ public class AudioEqualizerActivity extends Activity {
 //        	int dbValue = (int)(10*Math.log10(magnitude));
 //        	Log.i("AudioEqualizerActivity",Integer.toString(dbValue));
 //////////////////////////////////////////////////////////////////////////////
-        	
-        	visBars.get(i).setProgress(dbValue*2);
+        	visBars.get(i).updateProgress(dbValue);        		
         }
 	}
 
