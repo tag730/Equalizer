@@ -55,7 +55,7 @@
       </metadata>
     </info>
   </bookmark>
-  <bookmark href="file:///C:/Users/Adam/workspace/AudioEqualizer/res/drawable-mdpi/progress_primary_holo_dark.9.png" added="2012-01-25T21:34:08Z" modified="2012-01-25T21:48:23Z" visited="2012-01-25T21:34:09Z">
+  <bookmark href="file:///C:/Users/Adam/workspace/AudioEqualizer/res/drawable-mdpi/progress_primary_holo_dark.9.png" added="2012-01-25T21:34:08Z" modified="2012-01-30T02:08:08Z" visited="2012-01-25T21:34:09Z">
     <info>
       <metadata owner="http://freedesktop.org">
         <mime:mime-type type="image/png"/>
@@ -63,12 +63,12 @@
           <bookmark:group>Graphics</bookmark:group>
         </bookmark:groups>
         <bookmark:applications>
-          <bookmark:application name="GNU Image Manipulation Program" exec="&apos;gimp-2.6 %u&apos;" modified="2012-01-25T21:48:23Z" count="5"/>
+          <bookmark:application name="GNU Image Manipulation Program" exec="&apos;gimp-2.6 %u&apos;" modified="2012-01-30T02:08:08Z" count="6"/>
         </bookmark:applications>
       </metadata>
     </info>
   </bookmark>
-  <bookmark href="file:///C:/Users/Adam/workspace/AudioEqualizer/res/drawable-mdpi/progress_secondary_holo_dark.9.png" added="2012-01-25T21:34:09Z" modified="2012-01-25T21:50:38Z" visited="2012-01-25T21:34:09Z">
+  <bookmark href="file:///C:/Users/Adam/workspace/AudioEqualizer/res/drawable-mdpi/progress_secondary_holo_dark.9.png" added="2012-01-25T21:34:09Z" modified="2012-01-30T02:09:31Z" visited="2012-01-25T21:34:09Z">
     <info>
       <metadata owner="http://freedesktop.org">
         <mime:mime-type type="image/png"/>
@@ -76,7 +76,7 @@
           <bookmark:group>Graphics</bookmark:group>
         </bookmark:groups>
         <bookmark:applications>
-          <bookmark:application name="GNU Image Manipulation Program" exec="&apos;gimp-2.6 %u&apos;" modified="2012-01-25T21:50:38Z" count="4"/>
+          <bookmark:application name="GNU Image Manipulation Program" exec="&apos;gimp-2.6 %u&apos;" modified="2012-01-30T02:09:31Z" count="6"/>
         </bookmark:applications>
       </metadata>
     </info>
@@ -141,12 +141,25 @@
       </metadata>
     </info>
   </bookmark>
-  <bookmark href="file:///C:/Users/Adam/Documents/Docs/TuckerFender.svg" added="2012-01-29T20:33:14Z" modified="2012-01-29T20:33:14Z" visited="2012-01-29T20:33:14Z">
+  <bookmark href="file:///C:/Users/Adam/Documents/Docs/TuckerFender.svg" added="2012-01-29T20:33:14Z" modified="2012-01-30T21:57:04Z" visited="2012-01-29T20:33:14Z">
     <info>
       <metadata owner="http://freedesktop.org">
         <mime:mime-type type="application/x-ext-svg"/>
         <bookmark:applications>
-          <bookmark:application name="Inkscape.exe" exec="&apos;Inkscape.exe %u&apos;" modified="2012-01-29T20:33:14Z" count="1"/>
+          <bookmark:application name="Inkscape.exe" exec="&apos;Inkscape.exe %u&apos;" modified="2012-01-30T21:57:04Z" count="2"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///C:/Users/Adam/Documents/Docs/Tucker_Fender30pxStroke.png" added="2012-01-30T22:27:10Z" modified="2012-01-30T22:27:10Z" visited="2012-01-30T22:27:10.121528Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="image/png"/>
+        <bookmark:groups>
+          <bookmark:group>Graphics</bookmark:group>
+        </bookmark:groups>
+        <bookmark:applications>
+          <bookmark:application name="GNU Image Manipulation Program" exec="&apos;gimp-2.6 %u&apos;" modified="2012-01-30T22:27:10Z" count="1"/>
         </bookmark:applications>
       </metadata>
     </info>

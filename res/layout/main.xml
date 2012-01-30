@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!-- This is the main.xml file that is used when the phone is in portrait mode -->
-
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/MainLayout"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:orientation="vertical"
         android:weightSum="3" >
 
         <CheckBox
             android:id="@+id/eq_checkbox"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
+            android:button="@drawable/btn_check_holo_dark"
             android:text="@string/EQ" />
 
         <LinearLayout
@@ -22,16 +25,16 @@
             android:layout_weight="2"
             android:paddingLeft="10dip"
             android:paddingRight="10dip" >
-
         </LinearLayout>
 
         <!-- Divider (Horizontal) -->
-		<View
-       		android:layout_height="2dp"
-        	android:layout_width="fill_parent"
-        	android:layout_marginLeft="10dip"
-        	android:layout_marginRight="10dip"
-        	android:background="#88404040" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="10dip"
+            android:background="#88404040" />
 
         <LinearLayout
             android:id="@+id/SecondLayout"
@@ -42,26 +45,26 @@
             <CheckBox
                 android:id="@+id/bb_checkbox"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
+                android:button="@drawable/btn_check_holo_dark"
                 android:text="@string/bass_boost" />
 
             <SeekBar
                 android:id="@+id/bb_seekbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
-    
 
             <CheckBox
                 android:id="@+id/v_checkbox"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
+                android:button="@drawable/btn_check_holo_dark"
                 android:text="@string/virtualizer" />
 
             <SeekBar
                 android:id="@+id/v_seekbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
-
         </LinearLayout>
 
         <LinearLayout
@@ -69,7 +72,46 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:paddingBottom="8dp">
+            android:paddingBottom="8dp" >
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout1"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:gravity="center_horizontal" >
+
+            <Spinner
+                android:id="@+id/preset_spinner"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/spinner_holo_dark"
+                android:textColor="#ffffff" 
+                android:layout_weight="1"/>
+
+            <Button
+                android:id="@+id/save_preset"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/btn_default_holo_dark"
+                android:text="@string/save_button"
+                android:textColor="#ffffff" />
+
+            <Button
+                android:id="@+id/delete_preset"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/btn_default_holo_dark"
+                android:text="@string/delete_preset"
+                android:textColor="#ffffff" />
+
+            <Button
+                android:id="@+id/new_preset"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/btn_default_holo_dark"
+                android:text="@string/new_preset"
+                android:textColor="#ffffff" />
         </LinearLayout>
 
     </LinearLayout>

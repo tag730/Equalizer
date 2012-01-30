@@ -15,78 +15,123 @@
 	        android:layout_weight="1"
 	        android:paddingBottom="10dip"
 	        android:weightSum="2" >
-        
+
 	        <LinearLayout
-		        android:id="@+id/linearLayout2"
-		        android:layout_width="0dp"
-		        android:layout_height="match_parent"
-		        android:layout_weight="1"
-		        android:orientation="vertical" >
-	
-		        <CheckBox
-		            android:id="@+id/eq_checkbox"
-		            android:layout_width="wrap_content"
-		            android:layout_height="wrap_content"
-		            android:text="@string/EQ" />
-	
-		        <LinearLayout
-		            android:id="@+id/eq_space"
-		            android:layout_width="match_parent"
-		            android:layout_height="wrap_content"
-		            android:layout_weight="2"
-		            android:paddingLeft="10dip"
-		            android:paddingRight="10dip" >
-		        </LinearLayout>
-		    </LinearLayout>
-		    
+	            android:id="@+id/linearLayout2"
+	            android:layout_width="0dp"
+	            android:layout_height="match_parent"
+	            android:layout_weight="1"
+	            android:orientation="vertical" >
+
+	            <CheckBox
+	                android:id="@+id/eq_checkbox"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:button="@drawable/btn_check_holo_dark"
+	                android:text="@string/EQ" />
+
+	            <LinearLayout
+	                android:id="@+id/eq_space"
+	                android:layout_width="match_parent"
+	                android:layout_height="wrap_content"
+	                android:layout_weight="2"
+	                android:paddingLeft="10dip"
+	                android:paddingRight="10dip" >
+	            </LinearLayout>
+	        </LinearLayout>
+
 	        <!-- Divider (Vertical) -->
+
 	        <View
-       			android:layout_height="fill_parent"
-        		android:layout_width="2dp"
-        		android:background="#88404040" />
-	
-		    <LinearLayout
-		        android:id="@+id/SecondLayout"
-		        android:layout_width="0dip"
-		        android:layout_height="match_parent"
-		        android:paddingLeft="8dip"
-		        android:layout_weight="1"
-		        android:orientation="vertical" >
-	
-		        <CheckBox
-		            android:id="@+id/bb_checkbox"
-		            android:layout_width="wrap_content"
-		            android:layout_height="wrap_content"
-		            android:text="@string/bass_boost" />
-	
-		        <SeekBar
-		            android:id="@+id/bb_seekbar"
-		            android:layout_width="match_parent"
-		            android:layout_height="wrap_content"/>
-		            <!-- android:progressDrawable="@drawable/scrubber_progress_holo_dark"
-		            android:thumb="@drawable/seek_holo" /> -->
-	
-		        <CheckBox
-		            android:id="@+id/v_checkbox"
-		            android:layout_width="wrap_content"
-		            android:layout_height="wrap_content"
-		            android:text="@string/virtualizer" />
-	
-		        <SeekBar
-		            android:id="@+id/v_seekbar"
-		            android:layout_width="match_parent"
-		            android:layout_height="wrap_content"/>
-		            <!-- android:progressDrawable="@drawable/scrubber_progress_holo_dark"
-		            android:thumb="@drawable/seek_holo" /> -->
+	            android:layout_width="2dp"
+	            android:layout_height="fill_parent"
+	            android:background="#88404040" />
 
-		        <LinearLayout
-		            android:id="@+id/vis_space"
-		            android:layout_width="match_parent"
-		            android:layout_height="fill_parent" >
-		        </LinearLayout>
+	        <LinearLayout
+	            android:id="@+id/SecondLayout"
+	            android:layout_width="0dip"
+	            android:layout_height="match_parent"
+	            android:layout_weight="1"
+	            android:orientation="vertical"
+	            android:paddingLeft="8dip" >
 
-		    </LinearLayout>
-	
-	    </LinearLayout>	
+	            <CheckBox
+	                android:id="@+id/bb_checkbox"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:button="@drawable/btn_check_holo_dark"
+	                android:text="@string/bass_boost" />
+
+	            <SeekBar
+	                android:id="@+id/bb_seekbar"
+	                android:layout_width="match_parent"
+	                android:layout_height="wrap_content" />
+	            <!--
+                    android:progressDrawable="@drawable/scrubber_progress_holo_dark"
+		            android:thumb="@drawable/seek_holo" />
+	            -->
+
+	            <CheckBox
+	                android:id="@+id/v_checkbox"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:button="@drawable/btn_check_holo_dark"
+	                android:text="@string/virtualizer" />
+
+	            <SeekBar
+	                android:id="@+id/v_seekbar"
+	                android:layout_width="match_parent"
+	                android:layout_height="wrap_content" />
+	            <!--
+                    android:progressDrawable="@drawable/scrubber_progress_holo_dark"
+		            android:thumb="@drawable/seek_holo" />
+	            -->
+
+	            <LinearLayout
+	                android:id="@+id/vis_space"
+	                android:layout_width="match_parent"
+	                android:layout_height="fill_parent" >
+	            </LinearLayout>
+	        </LinearLayout>
+	    </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout1"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:gravity="center_horizontal" >
+
+            <Spinner
+                android:id="@+id/preset_spinner"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/spinner_holo_dark"
+                android:textColor="#ffffff" 
+                android:layout_weight="1"/>
+
+            <Button
+                android:id="@+id/save_preset"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/btn_default_holo_dark"
+                android:text="@string/save_button"
+                android:textColor="#ffffff" />
+
+            <Button
+                android:id="@+id/delete_preset"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/btn_default_holo_dark"
+                android:text="@string/delete_preset"
+                android:textColor="#ffffff" />
+
+            <Button
+                android:id="@+id/new_preset"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/btn_default_holo_dark"
+                android:text="@string/new_preset"
+                android:textColor="#ffffff" />
+        </LinearLayout>
 	    
    	</LinearLayout>

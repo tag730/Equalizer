@@ -13,31 +13,31 @@ public class AudioBar {
 	
 	public void updateProgress(int mProgress){
 		int position=0;
+		int tempSecondaryProgress;
 		progressHistory.add(mProgress);
 		if (progressHistory.size()>HISTORY_SIZE){
 			progressHistory.remove(0);
 		}
 		
 		for(int i=1; i<progressHistory.size();i++){
-			if(progressHistory.get(i)>progressHistory.get(position)){
+			if(progressHistory.get(i)>=progressHistory.get(position)){
 				position=i;
 			}
 		}
 		
-		if (position>0 && position < progressHistory.size()-1) {
-			if (progressHistory.get(position)>progressHistory.get(position-1) &&
-					progressHistory.get(position)>progressHistory.get(position+1)){
-				bar.setSecondaryProgress(progressHistory.get(position));
-			}
-			else {
-				bar.setSecondaryProgress(progressHistory.get(progressHistory.size()-1));
-			}
-		}
-		else {
-			bar.setSecondaryProgress(progressHistory.get(progressHistory.size()-1));
-		}		
+
+		tempSecondaryProgress=progressHistory.get(position);
+		if (position==0 && progressHistory.size()>1){
+			progressHistory.clear();
+		} 
 		
-		bar.setProgress(Math.max(bar.getProgress()-3,mProgress));
+//		tempSecondaryProgress=progressHistory.get(position);			
+//		if (position==0){
+//			progressHistory.clear();
+//		}
+		
+		bar.setSecondaryProgress(Math.max(bar.getSecondaryProgress()-3, tempSecondaryProgress));
+		bar.setProgress(Math.max(bar.getProgress()-5,mProgress));
 		
 	}	
 }

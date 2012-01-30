@@ -11,33 +11,67 @@ public final class R {
     public static final class attr {
     }
     public static final class drawable {
-        public static final int ic_launcher=0x7f020000;
-        public static final int progress_bg_holo_dark=0x7f020001;
-        public static final int progress_primary_holo_dark=0x7f020002;
-        public static final int progress_secondary_holo_dark=0x7f020003;
-        public static final int scrubber_control_focused_holo=0x7f020004;
-        public static final int scrubber_control_normal_holo=0x7f020005;
-        public static final int scrubber_control_pressed_holo=0x7f020006;
-        public static final int scrubber_primary_holo=0x7f020007;
-        public static final int scrubber_primary_vertical_holo=0x7f020008;
-        public static final int scrubber_progress_holo_dark=0x7f020009;
-        public static final int scrubber_progress_vertical_holo_dark=0x7f02000a;
-        public static final int scrubber_secondary_holo=0x7f02000b;
-        public static final int scrubber_secondary_vertical_holo=0x7f02000c;
-        public static final int scrubber_track_holo_dark=0x7f02000d;
-        public static final int scrubber_track_holo_vertical_dark=0x7f02000e;
-        public static final int seek_holo=0x7f02000f;
-        public static final int visbar_progress=0x7f020010;
+        public static final int btn_check_holo_dark=0x7f020000;
+        public static final int btn_check_off_disable_focused_holo_dark=0x7f020001;
+        public static final int btn_check_off_disable_holo_dark=0x7f020002;
+        public static final int btn_check_off_disabled_focused_holo_dark=0x7f020003;
+        public static final int btn_check_off_disabled_holo_dark=0x7f020004;
+        public static final int btn_check_off_focused_holo_dark=0x7f020005;
+        public static final int btn_check_off_holo_dark=0x7f020006;
+        public static final int btn_check_off_normal_holo_dark=0x7f020007;
+        public static final int btn_check_off_pressed_holo_dark=0x7f020008;
+        public static final int btn_check_on_disable_holo_dark=0x7f020009;
+        public static final int btn_check_on_disabled_focused_holo_dark=0x7f02000a;
+        public static final int btn_check_on_disabled_holo_dark=0x7f02000b;
+        public static final int btn_check_on_focused_holo_dark=0x7f02000c;
+        public static final int btn_check_on_holo_dark=0x7f02000d;
+        public static final int btn_check_on_pressed_holo_dark=0x7f02000e;
+        public static final int btn_default_disabled_focused_holo_dark=0x7f02000f;
+        public static final int btn_default_disabled_holo_dark=0x7f020010;
+        public static final int btn_default_focused_holo_dark=0x7f020011;
+        public static final int btn_default_holo_dark=0x7f020012;
+        public static final int btn_default_normal_holo_dark=0x7f020013;
+        public static final int btn_default_pressed_holo_dark=0x7f020014;
+        public static final int ic_launcher=0x7f020015;
+        public static final int progress_bg_holo_dark=0x7f020016;
+        public static final int progress_primary_holo_dark=0x7f020017;
+        public static final int progress_secondary_holo_dark=0x7f020018;
+        public static final int scrubber_control_focused_holo=0x7f020019;
+        public static final int scrubber_control_normal_holo=0x7f02001a;
+        public static final int scrubber_control_pressed_holo=0x7f02001b;
+        public static final int scrubber_primary_holo=0x7f02001c;
+        public static final int scrubber_primary_vertical_holo=0x7f02001d;
+        public static final int scrubber_progress_holo_dark=0x7f02001e;
+        public static final int scrubber_progress_vertical_holo_dark=0x7f02001f;
+        public static final int scrubber_secondary_holo=0x7f020020;
+        public static final int scrubber_secondary_vertical_holo=0x7f020021;
+        public static final int scrubber_track_holo_dark=0x7f020022;
+        public static final int scrubber_track_holo_vertical_dark=0x7f020023;
+        public static final int seek_holo=0x7f020024;
+        public static final int simple_spinner_item=0x7f020025;
+        public static final int spinner_default_holo_dark=0x7f020026;
+        public static final int spinner_disabled_holo_dark=0x7f020027;
+        public static final int spinner_focused_holo_dark=0x7f020028;
+        public static final int spinner_holo_dark=0x7f020029;
+        public static final int spinner_pressed_holo_dark=0x7f02002a;
+        public static final int spinner_style=0x7f02002b;
+        public static final int visbar_progress=0x7f02002c;
     }
     public static final class id {
         public static final int MainLayout=0x7f050000;
         public static final int SecondLayout=0x7f050003;
-        public static final int Top=0x7f050009;
+        public static final int Top=0x7f05000e;
         public static final int bb_checkbox=0x7f050004;
         public static final int bb_seekbar=0x7f050005;
+        public static final int delete_preset=0x7f05000c;
         public static final int eq_checkbox=0x7f050001;
         public static final int eq_space=0x7f050002;
-        public static final int linearLayout2=0x7f05000a;
+        public static final int linearLayout1=0x7f050009;
+        public static final int linearLayout2=0x7f05000f;
+        public static final int new_preset=0x7f05000d;
+        public static final int preset_spinner=0x7f05000a;
+        public static final int save_preset=0x7f05000b;
+        public static final int spinnerTarget=0x7f050010;
         public static final int v_checkbox=0x7f050006;
         public static final int v_seekbar=0x7f050007;
         public static final int vis_space=0x7f050008;
@@ -49,7 +83,10 @@ public final class R {
         public static final int EQ=0x7f040002;
         public static final int app_name=0x7f040001;
         public static final int bass_boost=0x7f040003;
+        public static final int delete_preset=0x7f040006;
         public static final int hello=0x7f040000;
+        public static final int new_preset=0x7f040007;
+        public static final int save_button=0x7f040005;
         public static final int virtualizer=0x7f040004;
     }
     public static final class styleable {

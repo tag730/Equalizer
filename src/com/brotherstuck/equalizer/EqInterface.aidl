@@ -7,6 +7,8 @@ interface EqInterface {
 	int getCenterFreq(int band);
 	int getBandLevel(int band);
 	void setBandLevel(int band, int level);
+	boolean isEqEnabled();
+	void setEqEnabled(boolean isEnabled);
 	boolean isBassBoostEnabled();
 	void setBassBoostEnabled(boolean isEnabled);
 	int getBassBoostStrength();

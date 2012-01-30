@@ -37,7 +37,6 @@ public class EqService extends Service {
 		  
 		  // Setup a Audio Effect "Equalizer" object with priority=10 and audio session id=0 (global)
 	      myEq = new Equalizer(10,0);
-	      myEq.setEnabled(true);
 	      
 	      // TODO : Implement BassBoost and Virtualizer
 	      // Setup a "BassBoost" object with priority=10, and audio session id=0 (global)
@@ -126,12 +125,14 @@ public class EqService extends Service {
 			}
 			@Override
 			public boolean isBassBoostEnabled() throws RemoteException {
+				Log.i(TAG,"Returned if BassBoost is Enabled");
 				return mBassBoost.getEnabled();
 			}
 			@Override
-			public void setBassBoostEnabled(boolean isEnabled)
+			public void setBassBoostEnabled(boolean enabled)
 					throws RemoteException {
-				mBassBoost.setEnabled(isEnabled);				
+				Log.i(TAG,"Set BassBoost.enabled="+Boolean.toString(enabled));
+				mBassBoost.setEnabled(enabled);				
 			}
 			@Override
 			public int getBassBoostStrength() throws RemoteException {
@@ -147,9 +148,10 @@ public class EqService extends Service {
 				return mVirtualizer.getEnabled();
 			}
 			@Override
-			public void setVirtualizerEnabled(boolean isEnabled)
+			public void setVirtualizerEnabled(boolean enabled)
 					throws RemoteException {
-				mVirtualizer.setEnabled(isEnabled);
+				Log.i(TAG,"Set Virtualizer.enabled="+Boolean.toString(enabled));
+				mVirtualizer.setEnabled(enabled);
 			}
 			@Override
 			public int getVirtualizerStrength() throws RemoteException {
@@ -194,6 +196,14 @@ public class EqService extends Service {
 				return properties;
 //				Equalizer.Settings mySettings=myEq.getProperties();
 //				return mySettings.toString();
+			}
+			@Override
+			public boolean isEqEnabled() throws RemoteException {
+				return myEq.getEnabled();
+			}
+			@Override
+			public void setEqEnabled(boolean enabled) throws RemoteException {
+				myEq.setEnabled(enabled);
 			}
 	  };
 }

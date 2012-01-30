@@ -12,16 +12,19 @@ import android.media.audiofx.Visualizer;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.Spinner;
@@ -38,6 +41,8 @@ public class AudioEqualizerActivity extends Activity {
     private final float EXPONENT=1.5f;
     private ArrayList<AudioBar> visBars;
     private int mDivisions;
+    private boolean eqEnabled, bbEnabled, vEnabled;
+    private int bbValue, vValue;
 	
 	// Using LinearLayout instead of R.layout.main (main.xml)
 	LinearLayout mLinearLayout;
@@ -107,12 +112,21 @@ public class AudioEqualizerActivity extends Activity {
 		// For each custom preset that has been made
 		for(int i=0; i<customPresets.size();i++){
 			// add "NAME#SETTINGS$"
-			customPresetString+=customPresets.get(i).key+"#"+customPresets.get(i).value+"$";
+			customPresetString+=
+				customPresets.get(i).key+"#"+
+				customPresets.get(i).value+"#"+
+				Boolean.toString(customPresets.get(i).eqEnabled)+"#"+
+				Boolean.toString(customPresets.get(i).bbEnabled)+"#"+
+				Integer.toString(customPresets.get(i).bbValue)+"#"+
+				Boolean.toString(customPresets.get(i).vEnabled)+"#"+
+				Integer.toString(customPresets.get(i).vValue)+"$";
 		}
 		
 		// Open properties file for saving
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME,0);
 		SharedPreferences.Editor editor = settings.edit();
+		
+//		customPresetString="";
 		
 		// Save key-value pair where key is PRESETS_NAME and value is the
 		// concatenated string of presets
@@ -149,6 +163,7 @@ public class AudioEqualizerActivity extends Activity {
         if(mVisualizer!=null){
         	mVisualizer.setEnabled(true);
         }
+        this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
     
     private void populateCustomPresets() {
@@ -177,11 +192,16 @@ public class AudioEqualizerActivity extends Activity {
 				keyValuePair=eqData[i].split(keyValuePairDelim);
 				
 				// if there is no error is the string
-				if(keyValuePair.length==2){
+				if(keyValuePair.length==7){
 					// add preset to the customPreset list to be used by the
 					// GUI presetSpinner
 					customPresets.add(
-							new EQData(keyValuePair[0],keyValuePair[1])
+							new EQData(keyValuePair[0],keyValuePair[1],
+									Boolean.parseBoolean(keyValuePair[2]),
+									Boolean.parseBoolean(keyValuePair[3]),
+									Integer.parseInt(keyValuePair[4]),
+									Boolean.parseBoolean(keyValuePair[5]),
+									Integer.parseInt(keyValuePair[6]))
 							);
 				}
 			}
@@ -189,7 +209,12 @@ public class AudioEqualizerActivity extends Activity {
 			// This is the case of the first time the program is installed
 			try {
 				// create one preset, the Default, which can't be deleted
-				customPresets.add(new EQData("Default",mService.getProperties()));
+				customPresets.add(new EQData("Default",mService.getProperties(),
+						true, //EQ enabled
+						false, //BassBoost not enabled
+						0, //BassBoost value of 0
+						false, //Virtualizer not enabled
+						0)); //virtualizer value of 0
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -253,23 +278,23 @@ public class AudioEqualizerActivity extends Activity {
         mLinearLayout =  (LinearLayout) findViewById(R.id.MainLayout);
         mSecondLinearLayout=(LinearLayout) findViewById(R.id.SecondLayout);
         
-        // Setup layout for presets, including the spinner
-        // and "new", "save", and "delete" buttons
-        LinearLayout presets = new LinearLayout(this);
-        presets.setOrientation(LinearLayout.HORIZONTAL);
-        LinearLayout.LayoutParams presetsParams= new LinearLayout.LayoutParams(
-        		LayoutParams.FILL_PARENT, // take up full horizontal space
-        		LayoutParams.WRAP_CONTENT); // take up only as much vertical space as it needs
-        presets.setLayoutParams(presetsParams);
-        
-        // Rest in the bottom-center of its container
-        presets.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM);
+//        // Setup layout for presets, including the spinner
+//        // and "new", "save", and "delete" buttons
+//        LinearLayout presets = new LinearLayout(this);
+//        presets.setOrientation(LinearLayout.HORIZONTAL);
+//        LinearLayout.LayoutParams presetsParams= new LinearLayout.LayoutParams(
+//        		LayoutParams.FILL_PARENT, // take up full horizontal space
+//        		LayoutParams.WRAP_CONTENT); // take up only as much vertical space as it needs
+//        presets.setLayoutParams(presetsParams);
+//        
+//        // Rest in the bottom-center of its container
+//        presets.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM);
         
         // Set up spinner for presets (selection list)
-        presetSpinner = new Spinner(this);
+        presetSpinner = (Spinner)findViewById(R.id.preset_spinner);
         
         // Set up adapter to link the spinner to the list of presets
-        ArrayAdapter<EQData> myPresetsAdapter=new ArrayAdapter<EQData>(this,android.R.layout.simple_spinner_item,customPresets);
+        ArrayAdapter<EQData> myPresetsAdapter=new ArrayAdapter<EQData>(this,R.drawable.simple_spinner_item,customPresets);
         
         // Setup up graphics for the dropdown items
         myPresetsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -283,6 +308,11 @@ public class AudioEqualizerActivity extends Activity {
             	try {
             		// recall the properties from the selected preset
 					mService.setProperties(customPresets.get(pos).value);
+					((CheckBox)findViewById(R.id.eq_checkbox)).setChecked(customPresets.get(pos).eqEnabled);
+					((CheckBox)findViewById(R.id.bb_checkbox)).setChecked(customPresets.get(pos).bbEnabled);
+					((SeekBar)findViewById(R.id.bb_seekbar)).setProgress(customPresets.get(pos).bbValue);
+					((CheckBox)findViewById(R.id.v_checkbox)).setChecked(customPresets.get(pos).vEnabled);
+					((SeekBar)findViewById(R.id.v_seekbar)).setProgress(customPresets.get(pos).vValue);
 				} catch (RemoteException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -299,8 +329,7 @@ public class AudioEqualizerActivity extends Activity {
         presetSpinner.setOnItemSelectedListener(new MyOnItemSelectedListener());
         
         // Set up a button to create a new preset and make it active
-        Button newPresetButton = new Button(this);
-        newPresetButton.setText("New");
+        Button newPresetButton = (Button)findViewById(R.id.new_preset);        
         newPresetButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
@@ -308,7 +337,12 @@ public class AudioEqualizerActivity extends Activity {
 					// Add preset object to the presets list, using current settings
 					customPresets.add(
 							new EQData(Integer.toString(presetSpinner.getAdapter().getCount()),
-							mService.getProperties())
+							mService.getProperties(),
+							((CheckBox)findViewById(R.id.eq_checkbox)).isChecked(),
+							((CheckBox)findViewById(R.id.bb_checkbox)).isChecked(),
+							((SeekBar)findViewById(R.id.bb_seekbar)).getProgress(),
+							((CheckBox)findViewById(R.id.v_checkbox)).isChecked(),
+							((SeekBar)findViewById(R.id.v_seekbar)).getProgress())
 							);
 					// Set this new preset as the active preset
 					presetSpinner.setSelection(presetSpinner.getAdapter().getCount()-1);
@@ -320,14 +354,19 @@ public class AudioEqualizerActivity extends Activity {
         
         // Set up a button to save the currently-selected preset
         // using the current eq / bassboost / virtualizer settings
-        Button savePresetButton = new Button(this);
-        savePresetButton.setText("Save");
+        Button savePresetButton = (Button)findViewById(R.id.save_preset);
         savePresetButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
 				// Set "value" of preset (EQ data) to the current EQ data
 				try {
-					customPresets.get(presetSpinner.getSelectedItemPosition()).value=mService.getProperties();
+					EQData temp=customPresets.get(presetSpinner.getSelectedItemPosition());
+					temp.value=mService.getProperties();
+					temp.eqEnabled=((CheckBox)findViewById(R.id.eq_checkbox)).isChecked();
+					temp.bbEnabled=((CheckBox)findViewById(R.id.bb_checkbox)).isChecked();
+					temp.vEnabled=((CheckBox)findViewById(R.id.v_checkbox)).isChecked();
+					temp.bbValue=((SeekBar)findViewById(R.id.bb_seekbar)).getProgress();
+					temp.vValue=((SeekBar)findViewById(R.id.v_seekbar)).getProgress();
 				} catch (RemoteException e) {
 					e.printStackTrace();
 				}
@@ -336,8 +375,7 @@ public class AudioEqualizerActivity extends Activity {
         
         // Set up a button to delete the currently-selected preset
         // and activate the preset that precedes it in the presets list
-        Button deletePresetButton = new Button(this);
-        deletePresetButton.setText("Delete");
+        Button deletePresetButton = (Button)findViewById(R.id.delete_preset);
         deletePresetButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
@@ -352,10 +390,10 @@ public class AudioEqualizerActivity extends Activity {
 		});
         // Add the spinner and buttons to the horizontal linear layout, to be added to the
         // main layout later on
-        presets.addView(presetSpinner);
-        presets.addView(savePresetButton);
-        presets.addView(deletePresetButton);
-        presets.addView(newPresetButton);
+//        presets.addView(presetSpinner);
+//        presets.addView(savePresetButton);
+//        presets.addView(deletePresetButton);
+//        presets.addView(newPresetButton);
         
 
         // short value representing number of bands supported by Android Audio Engine
@@ -369,6 +407,21 @@ public class AudioEqualizerActivity extends Activity {
 
 			// Retrieve linear layout for EQ sliders
 			LinearLayout eqLayout = (LinearLayout) findViewById(R.id.eq_space);
+			
+			CheckBox mEqCheckBox = (CheckBox)findViewById(R.id.eq_checkbox);
+            mEqCheckBox.setChecked(mService.isEqEnabled());
+            mEqCheckBox.setOnCheckedChangeListener(new OnCheckedChangeListener(){
+				@Override
+				public void onCheckedChanged(CompoundButton cBox, boolean checked) {
+					try {
+						mService.setEqEnabled(checked);
+					} catch (RemoteException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}					
+				}            	
+            });
+			
 			
 			// for each of the supported bands, we will set up a slider from -10dB to 10dB boost/attenuation,
 			// as well as text labels to assist the user
@@ -505,17 +558,75 @@ public class AudioEqualizerActivity extends Activity {
             
             eqLayout.addView(Bounds);
 
-            mLinearLayout.addView(presets);
+//            mLinearLayout.addView(presets);
             
             SeekBar mBassBoost = (SeekBar) findViewById(R.id.bb_seekbar);
             mBassBoost.setProgressDrawable(getResources().getDrawable(R.drawable.scrubber_progress_holo_dark));
             mBassBoost.setThumb(getResources().getDrawable(R.drawable.seek_holo));
             mBassBoost.setPadding(32, 0, 32, 10);
+            mBassBoost.setMax(1000);
+            mBassBoost.setProgress(mService.getBassBoostStrength());
+            CheckBox mBBCheckBox = (CheckBox)findViewById(R.id.bb_checkbox);
+            mBBCheckBox.setChecked(mService.isBassBoostEnabled());
+            mBBCheckBox.setOnCheckedChangeListener(new OnCheckedChangeListener(){
+				@Override
+				public void onCheckedChanged(CompoundButton cBox, boolean checked) {
+					try {
+						mService.setBassBoostEnabled(checked);
+					} catch (RemoteException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}					
+				}            	
+            });
+            // Set up so that when seekbar changes for a certain band, we update the
+            // actual value of the band in our Equalizer object in the EqService class
+            mBassBoost.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                public void onProgressChanged(SeekBar seekBar, int progress,
+                        boolean fromUser) {
+                    try {
+						mService.setBassBoostStrength(progress);
+					} catch (RemoteException e) {
+						e.printStackTrace();
+					}
+                }
+                public void onStartTrackingTouch(SeekBar seekBar) {}
+                public void onStopTrackingTouch(SeekBar seekBar) {}
+            });
             
             SeekBar mVirtualizer = (SeekBar) findViewById(R.id.v_seekbar);
             mVirtualizer.setProgressDrawable(getResources().getDrawable(R.drawable.scrubber_progress_holo_dark));
             mVirtualizer.setThumb(getResources().getDrawable(R.drawable.seek_holo));
-            mVirtualizer.setPadding(32, 0, 32, 10);
+            mVirtualizer.setPadding(32, 0, 32, 10);            
+            mVirtualizer.setMax(1000);
+            mVirtualizer.setProgress(mService.getVirtualizerStrength());
+            CheckBox mVCheckBox = (CheckBox)findViewById(R.id.v_checkbox);
+            mVCheckBox.setChecked(mService.isVirtualizerEnabled());
+            mVCheckBox.setOnCheckedChangeListener(new OnCheckedChangeListener(){
+				@Override
+				public void onCheckedChanged(CompoundButton cBox, boolean checked) {
+					try {
+						mService.setVirtualizerEnabled(checked);
+					} catch (RemoteException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}					
+				}            	
+            });
+            // Set up so that when seekbar changes for a certain band, we update the
+            // actual value of the band in our Equalizer object in the EqService class
+            mVirtualizer.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                public void onProgressChanged(SeekBar seekBar, int progress,
+                        boolean fromUser) {
+                    try {
+						mService.setVirtualizerStrength(progress);
+					} catch (RemoteException e) {
+						e.printStackTrace();
+					}
+                }
+                public void onStartTrackingTouch(SeekBar seekBar) {}
+                public void onStopTrackingTouch(SeekBar seekBar) {}
+            });
             
             
             // Create a VisualizerView (defined below), which will render the simplified audio

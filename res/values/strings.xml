@@ -6,5 +6,8 @@
     <string name="EQ">Equalizer</string>
     <string name="bass_boost">Bass Boost</string>
     <string name="virtualizer">Virtualizer (3D Effect)</string>
+    <string name="save_button">Save</string>
+    <string name="delete_preset">Delete</string>
+    <string name="new_preset">New</string>
 
 </resources>

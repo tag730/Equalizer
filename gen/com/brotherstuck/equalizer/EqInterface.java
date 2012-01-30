@@ -97,6 +97,23 @@ this.setBandLevel(_arg0, _arg1);
 reply.writeNoException();
 return true;
 }
+case TRANSACTION_isEqEnabled:
+{
+data.enforceInterface(DESCRIPTOR);
+boolean _result = this.isEqEnabled();
+reply.writeNoException();
+reply.writeInt(((_result)?(1):(0)));
+return true;
+}
+case TRANSACTION_setEqEnabled:
+{
+data.enforceInterface(DESCRIPTOR);
+boolean _arg0;
+_arg0 = (0!=data.readInt());
+this.setEqEnabled(_arg0);
+reply.writeNoException();
+return true;
+}
 case TRANSACTION_isBassBoostEnabled:
 {
 data.enforceInterface(DESCRIPTOR);
@@ -320,6 +337,38 @@ _reply.recycle();
 _data.recycle();
 }
 }
+public boolean isEqEnabled() throws android.os.RemoteException
+{
+android.os.Parcel _data = android.os.Parcel.obtain();
+android.os.Parcel _reply = android.os.Parcel.obtain();
+boolean _result;
+try {
+_data.writeInterfaceToken(DESCRIPTOR);
+mRemote.transact(Stub.TRANSACTION_isEqEnabled, _data, _reply, 0);
+_reply.readException();
+_result = (0!=_reply.readInt());
+}
+finally {
+_reply.recycle();
+_data.recycle();
+}
+return _result;
+}
+public void setEqEnabled(boolean isEnabled) throws android.os.RemoteException
+{
+android.os.Parcel _data = android.os.Parcel.obtain();
+android.os.Parcel _reply = android.os.Parcel.obtain();
+try {
+_data.writeInterfaceToken(DESCRIPTOR);
+_data.writeInt(((isEnabled)?(1):(0)));
+mRemote.transact(Stub.TRANSACTION_setEqEnabled, _data, _reply, 0);
+_reply.readException();
+}
+finally {
+_reply.recycle();
+_data.recycle();
+}
+}
 public boolean isBassBoostEnabled() throws android.os.RemoteException
 {
 android.os.Parcel _data = android.os.Parcel.obtain();
@@ -519,18 +568,20 @@ static final int TRANSACTION_getNumberOfBands = (android.os.IBinder.FIRST_CALL_T
 static final int TRANSACTION_getCenterFreq = (android.os.IBinder.FIRST_CALL_TRANSACTION + 3);
 static final int TRANSACTION_getBandLevel = (android.os.IBinder.FIRST_CALL_TRANSACTION + 4);
 static final int TRANSACTION_setBandLevel = (android.os.IBinder.FIRST_CALL_TRANSACTION + 5);
-static final int TRANSACTION_isBassBoostEnabled = (android.os.IBinder.FIRST_CALL_TRANSACTION + 6);
-static final int TRANSACTION_setBassBoostEnabled = (android.os.IBinder.FIRST_CALL_TRANSACTION + 7);
-static final int TRANSACTION_getBassBoostStrength = (android.os.IBinder.FIRST_CALL_TRANSACTION + 8);
-static final int TRANSACTION_setBassBoostStrength = (android.os.IBinder.FIRST_CALL_TRANSACTION + 9);
-static final int TRANSACTION_isVirtualizerEnabled = (android.os.IBinder.FIRST_CALL_TRANSACTION + 10);
-static final int TRANSACTION_setVirtualizerEnabled = (android.os.IBinder.FIRST_CALL_TRANSACTION + 11);
-static final int TRANSACTION_getVirtualizerStrength = (android.os.IBinder.FIRST_CALL_TRANSACTION + 12);
-static final int TRANSACTION_setVirtualizerStrength = (android.os.IBinder.FIRST_CALL_TRANSACTION + 13);
-static final int TRANSACTION_usePreset = (android.os.IBinder.FIRST_CALL_TRANSACTION + 14);
-static final int TRANSACTION_setProperties = (android.os.IBinder.FIRST_CALL_TRANSACTION + 15);
-static final int TRANSACTION_getProperties = (android.os.IBinder.FIRST_CALL_TRANSACTION + 16);
-static final int TRANSACTION_isRunning = (android.os.IBinder.FIRST_CALL_TRANSACTION + 17);
+static final int TRANSACTION_isEqEnabled = (android.os.IBinder.FIRST_CALL_TRANSACTION + 6);
+static final int TRANSACTION_setEqEnabled = (android.os.IBinder.FIRST_CALL_TRANSACTION + 7);
+static final int TRANSACTION_isBassBoostEnabled = (android.os.IBinder.FIRST_CALL_TRANSACTION + 8);
+static final int TRANSACTION_setBassBoostEnabled = (android.os.IBinder.FIRST_CALL_TRANSACTION + 9);
+static final int TRANSACTION_getBassBoostStrength = (android.os.IBinder.FIRST_CALL_TRANSACTION + 10);
+static final int TRANSACTION_setBassBoostStrength = (android.os.IBinder.FIRST_CALL_TRANSACTION + 11);
+static final int TRANSACTION_isVirtualizerEnabled = (android.os.IBinder.FIRST_CALL_TRANSACTION + 12);
+static final int TRANSACTION_setVirtualizerEnabled = (android.os.IBinder.FIRST_CALL_TRANSACTION + 13);
+static final int TRANSACTION_getVirtualizerStrength = (android.os.IBinder.FIRST_CALL_TRANSACTION + 14);
+static final int TRANSACTION_setVirtualizerStrength = (android.os.IBinder.FIRST_CALL_TRANSACTION + 15);
+static final int TRANSACTION_usePreset = (android.os.IBinder.FIRST_CALL_TRANSACTION + 16);
+static final int TRANSACTION_setProperties = (android.os.IBinder.FIRST_CALL_TRANSACTION + 17);
+static final int TRANSACTION_getProperties = (android.os.IBinder.FIRST_CALL_TRANSACTION + 18);
+static final int TRANSACTION_isRunning = (android.os.IBinder.FIRST_CALL_TRANSACTION + 19);
 }
 public int getBandLevelLow() throws android.os.RemoteException;
 public int getBandLevelHigh() throws android.os.RemoteException;
@@ -538,6 +589,8 @@ public int getNumberOfBands() throws android.os.RemoteException;
 public int getCenterFreq(int band) throws android.os.RemoteException;
 public int getBandLevel(int band) throws android.os.RemoteException;
 public void setBandLevel(int band, int level) throws android.os.RemoteException;
+public boolean isEqEnabled() throws android.os.RemoteException;
+public void setEqEnabled(boolean isEnabled) throws android.os.RemoteException;
 public boolean isBassBoostEnabled() throws android.os.RemoteException;
 public void setBassBoostEnabled(boolean isEnabled) throws android.os.RemoteException;
 public int getBassBoostStrength() throws android.os.RemoteException;
